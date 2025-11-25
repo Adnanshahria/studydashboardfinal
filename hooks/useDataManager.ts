@@ -1,4 +1,4 @@
-import { UserSettings, Chapter } from '../types';
+import { UserSettings, Chapter, TrackableItem } from '../types';
 
 export const useDataManager = (
     settings: UserSettings, 
@@ -66,7 +66,7 @@ export const useDataManager = (
                 ? JSON.parse(JSON.stringify(settings.subjectConfigs[subjectKey]))
                 : JSON.parse(JSON.stringify(settings.trackableItems));
 
-            currentItems = currentItems.filter((t: any) => t.key !== itemKey);
+            currentItems = currentItems.filter((t: TrackableItem) => t.key !== itemKey);
             const newConfigs = { ...(settings.subjectConfigs || {}) };
             newConfigs[subjectKey] = currentItems;
             handleSettingsUpdate({ ...settings, subjectConfigs: newConfigs });
@@ -78,7 +78,7 @@ export const useDataManager = (
             ? JSON.parse(JSON.stringify(settings.subjectConfigs[subjectKey]))
             : JSON.parse(JSON.stringify(settings.trackableItems));
 
-        const itemIndex = currentItems.findIndex((t: any) => t.key === itemKey);
+        const itemIndex = currentItems.findIndex((t: TrackableItem) => t.key === itemKey);
         if (itemIndex !== -1) {
             currentItems[itemIndex].name = newName;
             const newConfigs = { ...(settings.subjectConfigs || {}) };

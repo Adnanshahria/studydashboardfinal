@@ -42,6 +42,10 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ compositeData, streak,
         return () => clearInterval(interval);
     }, [settings.countdownTarget]);
 
+    const currentConfigItems: TrackableItem[] = selectedSubject === 'global' 
+        ? settings.trackableItems 
+        : (settings.subjectConfigs?.[selectedSubject] || settings.trackableItems);
+
     useEffect(() => {
         if (isEditingWeights) {
             let w: Record<string, number> = {};
@@ -55,9 +59,10 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ compositeData, streak,
     }, [isEditingWeights, selectedSubject, settings]);
 
     useEffect(() => {
-        const total = Object.values(tempWeights).reduce((a: number, b: number) => a + b, 0);
+        // FIX: Calculate total based ONLY on the items currently visible in the config
+        const total = currentConfigItems.reduce((acc, item) => acc + (tempWeights[item.key] || 0), 0);
         setWeightTotal(total);
-    }, [tempWeights]);
+    }, [tempWeights, currentConfigItems]);
 
     const handleWeightChange = (key: string, val: string) => {
         const num = parseInt(val) || 0;
@@ -76,10 +81,6 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ compositeData, streak,
         onUpdateCountdown(tempTarget, tempLabel);
         setIsEditingCountdown(false);
     };
-
-    const currentConfigItems: TrackableItem[] = selectedSubject === 'global' 
-        ? settings.trackableItems 
-        : (settings.subjectConfigs?.[selectedSubject] || settings.trackableItems);
 
     return (
         <section className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 print:hidden">

@@ -10,5 +10,11 @@ export default defineConfig({
   server: {
     host: true,
     port: 3000
+  },
+  build: {
+    target: 'es2015'
+  },
+  esbuild: {
+    target: 'es2015'
   }
 })

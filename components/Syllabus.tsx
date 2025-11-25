@@ -48,7 +48,7 @@ export const Syllabus: React.FC<SyllabusProps> = ({ activeSubject, userData, set
                     <button onClick={handlePrint} className="px-4 py-2 text-xs font-bold bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl hover:bg-slate-50 dark:hover:bg-white/10 text-slate-600 dark:text-slate-300 transition-colors flex items-center gap-2 shadow-sm">
                          🖨️ Print View
                     </button>
-                    <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 hidden md:flex gap-4">
+                    <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 flex gap-4">
                         <div className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-emerald-500 shadow shadow-emerald-500/50"></span> Done</div>
                         <div className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-rose-500 shadow shadow-rose-500/50"></span> Skip</div>
                     </div>
@@ -230,6 +230,9 @@ export const Syllabus: React.FC<SyllabusProps> = ({ activeSubject, userData, set
                     currentName={renameModal.currentName}
                     type={renameModal.type}
                     onSave={() => {
+                        // FIX: Safe check for renameModal existence
+                        if (!renameModal) return;
+                        
                         if (renameModal.type === 'column') {
                             onRenameColumn(activeSubject, renameModal.key as string, renameModal.currentName);
                         } else {

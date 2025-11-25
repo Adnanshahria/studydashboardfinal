@@ -224,6 +224,9 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeSubject, onChangeSubject
                         <div className="flex justify-end gap-3 mt-2">
                             <Button variant="secondary" onClick={() => setRenameModal(null)}>Cancel</Button>
                             <Button onClick={() => {
+                                // FIX: Safe check for renameModal existence
+                                if (!renameModal) return;
+                                
                                 onUpdateSettings({
                                     ...settings,
                                     customNames: { ...settings.customNames, [renameModal.key]: renameModal.currentName }
