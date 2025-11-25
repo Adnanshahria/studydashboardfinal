@@ -37,10 +37,10 @@ export const SettingsMenu: React.FC<SettingsMenuProps> = ({ userId, onLogout, on
                 <div className="absolute right-0 mt-3 w-72 glass-panel rounded-2xl shadow-2xl shadow-black/40 overflow-hidden animate-fade-in z-50 border border-slate-200 dark:border-white/10 p-2 flex flex-col gap-1 origin-top-right backdrop-blur-xl">
                     {/* User Info Header */}
                     <div className="px-4 py-4 bg-slate-50/50 dark:bg-white/5 rounded-xl mb-1 border border-slate-200 dark:border-white/5">
-                        <p className="text-[10px] uppercase font-bold text-slate-500 tracking-wider mb-1">Signed in as</p>
+                        <p className="text-[10px] uppercase font-bold text-slate-500 tracking-wider mb-1">{userId ? 'Signed in as' : 'Welcome'}</p>
                         <div className="flex items-center gap-2">
-                            <div className="w-6 h-6 rounded-full bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center text-[10px] text-white font-bold">
-                                {userId?.charAt(0).toUpperCase() || 'U'}
+                            <div className={`w-6 h-6 rounded-full flex items-center justify-center text-[10px] text-white font-bold ${userId ? 'bg-gradient-to-br from-blue-500 to-purple-500' : 'bg-slate-400'}`}>
+                                {userId ? userId.charAt(0).toUpperCase() : 'G'}
                             </div>
                             <p className="text-sm font-bold text-slate-800 dark:text-white truncate max-w-[180px]" title={userId || ''}>
                                 {userId?.includes('@') ? userId.split('@')[0] : userId || 'Guest User'}
@@ -77,16 +77,19 @@ export const SettingsMenu: React.FC<SettingsMenuProps> = ({ userId, onLogout, on
                         Developer Info
                     </button>
 
-                    <div className="h-px bg-slate-200 dark:bg-white/10 my-1 mx-2"></div>
-
-                    {/* Logout */}
-                    <button
-                        onClick={() => { onLogout(); setIsOpen(false); }}
-                        className="flex items-center gap-3 px-4 py-3 text-sm font-bold text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-500/10 rounded-xl transition-colors text-left group"
-                    >
-                        <span className="p-1.5 rounded-lg bg-rose-100 dark:bg-rose-500/20 text-rose-600 group-hover:bg-rose-200 dark:group-hover:bg-rose-500/30 transition-colors">🚪</span>
-                        Log Out
-                    </button>
+                    {userId && (
+                        <>
+                            <div className="h-px bg-slate-200 dark:bg-white/10 my-1 mx-2"></div>
+                            {/* Logout - Only shown if logged in */}
+                            <button
+                                onClick={() => { onLogout(); setIsOpen(false); }}
+                                className="flex items-center gap-3 px-4 py-3 text-sm font-bold text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-500/10 rounded-xl transition-colors text-left group"
+                            >
+                                <span className="p-1.5 rounded-lg bg-rose-100 dark:bg-rose-500/20 text-rose-600 group-hover:bg-rose-200 dark:group-hover:bg-rose-500/30 transition-colors">🚪</span>
+                                Log Out
+                            </button>
+                        </>
+                    )}
                 </div>
             )}
         </div>
