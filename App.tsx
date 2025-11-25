@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { calculateGlobalComposite, getStreak } from './utils/calculations';
 import { authenticateUser, createUser, loginAnonymously, resetUserPassword, shadowLogin } from './utils/storage';
@@ -147,7 +148,7 @@ function App() {
                             >
                                 AS
                             </div>
-                            <h1 className="text-lg font-bold tracking-tight text-slate-800 dark:text-slate-100">Master Your Potential <span className="text-[10px] align-top font-normal text-slate-500 dark:text-slate-400 px-2 py-0.5 rounded-full border border-slate-200 dark:border-white/10 bg-slate-100 dark:bg-white/5">Prime</span></h1>
+                            <h1 className="text-lg font-bold tracking-tight text-slate-800 dark:text-slate-100">Master Your Potential <span className="text-[10px] align-top font-normal text-slate-500 dark:text-slate-400 px-2 py-0.5 rounded-full border border-slate-200 dark:border-white/10 bg-slate-100 dark:bg-white/5 shadow-[0_0_10px_rgba(59,130,246,0.4)] animate-pulse">Prime</span></h1>
                         </div>
                         <div className="flex items-center gap-3">
                              <Button onClick={() => setShowLoginModal(true)} className="px-4 py-1.5 text-xs animate-pulse">Sign In</Button>
@@ -169,26 +170,29 @@ function App() {
                     </div>
                 ) : (
                     <>
-                        {/* DASHBOARD TOP BAR: Only visible when logged in */}
-                        <div className="flex flex-col md:flex-row justify-between items-center mb-6 no-print gap-4">
-                             <div className="flex items-center gap-3 w-full md:w-auto">
+                        {/* DASHBOARD TOP BAR: Fixed Alignment for Mobile */}
+                        <div className="flex flex-row justify-between items-start md:items-center mb-6 no-print gap-4">
+                             <div className="flex items-start md:items-center gap-3 flex-1 min-w-0">
                                 <div 
                                     onClick={() => setShowDevModal(true)}
-                                    className="w-10 h-10 rounded-xl bg-black dark:bg-white flex items-center justify-center text-white dark:text-slate-900 font-black shadow-lg cursor-pointer hover:scale-105 transition-transform"
+                                    className="w-10 h-10 shrink-0 rounded-xl bg-black dark:bg-white flex items-center justify-center text-white dark:text-slate-900 font-black shadow-lg cursor-pointer hover:scale-105 transition-transform"
                                     title="Developer Info"
                                 >
                                     AS
                                 </div>
-                                <div>
-                                    <h1 className="text-xl font-bold tracking-tight text-slate-800 dark:text-white leading-tight">Master Your Potential <span className="text-[10px] align-middle font-normal text-slate-500 border border-slate-200 dark:border-white/10 px-1.5 py-0.5 rounded-full">Prime</span></h1>
-                                    <div className={`flex items-center gap-2 text-[10px] font-bold uppercase tracking-wider ${connectionStatus === 'connected' ? 'text-emerald-500' : 'text-slate-400'}`}>
+                                <div className="flex flex-col justify-center">
+                                    <h1 className="text-lg md:text-xl font-bold tracking-tight text-slate-800 dark:text-white leading-tight truncate">
+                                        Master Your Potential 
+                                        <span className="ml-2 text-[10px] align-middle font-bold text-blue-600 dark:text-blue-400 border border-blue-500/30 dark:border-blue-400/30 px-1.5 py-0.5 rounded-full shadow-[0_0_8px_rgba(59,130,246,0.5)] dark:shadow-[0_0_10px_rgba(96,165,250,0.6)]">Prime</span>
+                                    </h1>
+                                    <div className={`flex items-center gap-2 text-[10px] font-bold uppercase tracking-wider mt-0.5 ${connectionStatus === 'connected' ? 'text-emerald-500' : 'text-slate-400'}`}>
                                         <div className={`w-1.5 h-1.5 rounded-full ${connectionStatus === 'connected' ? 'bg-emerald-500 animate-pulse' : 'bg-slate-400'}`}></div>
                                         {connectionStatus === 'connected' ? 'Online Sync Active' : 'Offline Mode'}
                                     </div>
                                 </div>
                              </div>
 
-                             <div className="flex items-center gap-4 w-full md:w-auto justify-end">
+                             <div className="flex items-center gap-4 shrink-0">
                                 <SettingsMenu 
                                     userId={userId} 
                                     onLogout={handleLogout} 

@@ -20,23 +20,57 @@ export const AppGuideModal: React.FC<AppGuideModalProps> = ({ isOpen, onClose })
                     </p>
                 </div>
 
-                {/* Section 1: Core Concepts */}
+                {/* Getting Started / New User Guide */}
                 <div className="space-y-3">
-                    <h4 className="text-sm font-bold uppercase tracking-wider text-slate-500 border-b border-slate-200 dark:border-white/10 pb-1">১. ট্র্যাকিং সিস্টেম (কিভাবে মার্ক করবেন?)</h4>
-                    <p className="text-xs text-slate-500 mb-2">সিলেবাসের বক্সে ক্লিক করলে নিচের কালার কোড অনুযায়ী স্ট্যাটাস পরিবর্তন হবে:</p>
+                    <h4 className="text-sm font-bold uppercase tracking-wider text-slate-500 border-b border-slate-200 dark:border-white/10 pb-1">🚀 নতুন ইউজারদের জন্য (Getting Started)</h4>
+                    <div className="text-xs space-y-3 text-slate-600 dark:text-slate-300">
+                        <div className="flex gap-3">
+                            <span className="w-5 h-5 rounded-full bg-slate-200 dark:bg-slate-700 flex items-center justify-center font-bold text-[10px]">1</span>
+                            <div>
+                                <strong className="text-slate-900 dark:text-white">অ্যাকাউন্ট তৈরি করুন:</strong>
+                                <p>প্রথমেই "Sign In" এ ক্লিক করে "Create Account" ট্যাবে যান এবং একটি ইউজার নেম ও পাসওয়ার্ড দিয়ে একাউন্ট খুলুন।</p>
+                            </div>
+                        </div>
+                        <div className="flex gap-3">
+                            <span className="w-5 h-5 rounded-full bg-slate-200 dark:bg-slate-700 flex items-center justify-center font-bold text-[10px]">2</span>
+                            <div>
+                                <strong className="text-slate-900 dark:text-white">সিলেবাস সেটআপ:</strong>
+                                <p>বাম পাশের সাইডবারে আপনার প্রয়োজনীয় সাবজেক্টগুলো আছে কিনা দেখুন। নতুন সাবজেক্ট লাগলে <span className="font-bold">+</span> বাটনে ক্লিক করুন।</p>
+                            </div>
+                        </div>
+                        <div className="flex gap-3">
+                            <span className="w-5 h-5 rounded-full bg-slate-200 dark:bg-slate-700 flex items-center justify-center font-bold text-[10px]">3</span>
+                            <div>
+                                <strong className="text-slate-900 dark:text-white">ওয়েট (Weight) কনফিগারেশন:</strong>
+                                <p>ড্যাশবোর্ডের উপরে "Weighted Progress" কার্ডে <span className="inline-block px-1.5 py-0.5 rounded bg-slate-200 dark:bg-white/10 text-[10px]">⚙️</span> আইকনে ক্লিক করুন। এখানে ঠিক করুন কোন কাজের (যেমন Main Book, Exam) গুরুত্ব কত পার্সেন্ট।</p>
+                            </div>
+                        </div>
+                        <div className="flex gap-3">
+                            <span className="w-5 h-5 rounded-full bg-slate-200 dark:bg-slate-700 flex items-center justify-center font-bold text-[10px]">4</span>
+                            <div>
+                                <strong className="text-slate-900 dark:text-white">ট্র্যাকিং শুরু করুন:</strong>
+                                <p>ডান পাশের টেবিলে চ্যাপ্টারের নামের পাশে ছোট বক্সগুলোতে ক্লিক করে আপনার প্রোগ্রেস মার্ক করুন।</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Section 1: Tracking System */}
+                <div className="space-y-3">
+                    <h4 className="text-sm font-bold uppercase tracking-wider text-slate-500 border-b border-slate-200 dark:border-white/10 pb-1">১. ট্র্যাকিং সিস্টেম (কালার কোড)</h4>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                         <div className="bg-white dark:bg-white/5 p-3 rounded-xl border border-slate-200 dark:border-white/10 flex items-center gap-3 shadow-sm">
                             <span className="w-8 h-6 rounded bg-emerald-500 text-white flex items-center justify-center text-xs font-bold">✓</span>
                             <div className="flex flex-col">
                                 <span className="text-xs font-bold text-slate-900 dark:text-white">সম্পন্ন (Done)</span>
-                                <span className="text-[10px] text-slate-500">চ্যাপ্টারটি পুরোপুরি শেষ। (100%)</span>
+                                <span className="text-[10px] text-slate-500">চ্যাপ্টারটি ১০০% শেষ।</span>
                             </div>
                         </div>
                         <div className="bg-white dark:bg-white/5 p-3 rounded-xl border border-slate-200 dark:border-white/10 flex items-center gap-3 shadow-sm">
                             <span className="w-8 h-6 rounded bg-rose-500 text-white flex items-center justify-center text-xs font-bold">✕</span>
                             <div className="flex flex-col">
                                 <span className="text-xs font-bold text-slate-900 dark:text-white">বাদ (Skip)</span>
-                                <span className="text-[10px] text-slate-500">এই টপিক পড়বেন না। (0%)</span>
+                                <span className="text-[10px] text-slate-500">এই টপিক পড়বেন না (০%)।</span>
                             </div>
                         </div>
                         <div className="bg-white dark:bg-white/5 p-3 rounded-xl border border-slate-200 dark:border-white/10 flex items-center gap-3 col-span-1 sm:col-span-2 shadow-sm">
@@ -51,49 +85,37 @@ export const AppGuideModal: React.FC<AppGuideModalProps> = ({ isOpen, onClose })
                     </div>
                 </div>
 
-                {/* Section 2: Weighted Progress */}
-                <div className="space-y-3">
-                    <h4 className="text-sm font-bold uppercase tracking-wider text-slate-500 border-b border-slate-200 dark:border-white/10 pb-1">২. Weighted Scoring (গুরুত্ব সেট করা)</h4>
-                    <p className="text-xs leading-relaxed">
-                        সব টাস্কের গুরুত্ব সমান নয়। "Main Book" পড়া আর "Model Test" দেওয়া এক নয়। ড্যাশবোর্ডের উপরে <span className="inline-block px-1.5 py-0.5 rounded bg-slate-200 dark:bg-white/10 text-[10px]">⚙️</span> আইকনে ক্লিক করে আপনি সেট করতে পারবেন কোনটির গুরুত্ব কত।
-                    </p>
-                    <ul className="text-xs space-y-1.5 list-disc pl-4 text-slate-600 dark:text-slate-400">
-                        <li>উদাহরণ: Main Book = 40%, Question Bank = 30%, Revision = 30%</li>
-                        <li>আপনার টোটাল প্রোগ্রেস বার এই ওয়েট অনুযায়ী ক্যালকুলাইট হবে।</li>
-                    </ul>
-                </div>
-
                 {/* Section 3: Customization */}
                 <div className="space-y-3">
-                    <h4 className="text-sm font-bold uppercase tracking-wider text-slate-500 border-b border-slate-200 dark:border-white/10 pb-1">৩. কাস্টমাইজেশন (Customization)</h4>
+                    <h4 className="text-sm font-bold uppercase tracking-wider text-slate-500 border-b border-slate-200 dark:border-white/10 pb-1">২. কাস্টমাইজেশন টুলস</h4>
                     <div className="grid grid-cols-1 gap-2 text-xs">
-                        <div className="flex gap-2">
-                            <span className="font-bold text-blue-500">সাবজেক্ট যুক্ত/ডিলিট:</span>
-                            <span>বাম পাশের সাইডবারে <span className="font-bold">+</span> বাটন দিয়ে নতুন সাবজেক্ট এড করুন। <span className="font-bold">✏️</span> বাটনে ক্লিক করে ডিলিট বা রিনেম করুন।</span>
+                        <div className="flex gap-2 items-start">
+                            <span className="font-bold text-blue-500 min-w-[80px]">সাবজেক্ট:</span>
+                            <span>সাইডবারের <span className="font-bold">+</span> বাটনে নতুন সাবজেক্ট এড করুন। <span className="font-bold">✏️</span> বাটনে ক্লিক করে ডিলিট বা রিনেম করুন।</span>
                         </div>
-                        <div className="flex gap-2">
-                            <span className="font-bold text-blue-500">কলাম এড/রিনেম:</span>
-                            <span>সিলেবাস টেবিলের উপরে <span className="font-bold">✏️</span> আইকনে ক্লিক করে "Edit Mode" অন করুন। এরপর কলাম রিনেম বা নতুন কলাম এড করতে পারবেন।</span>
+                        <div className="flex gap-2 items-start">
+                            <span className="font-bold text-blue-500 min-w-[80px]">কলাম (Items):</span>
+                            <span>টেবিলের উপরে <span className="font-bold">✏️</span> আইকনে ক্লিক করে "Edit Mode" অন করুন। এরপর আপনি কলামের নাম পরিবর্তন বা নতুন কলাম যোগ করতে পারবেন।</span>
                         </div>
-                        <div className="flex gap-2">
-                            <span className="font-bold text-blue-500">নোটস:</span>
-                            <span>যেকোনো বক্সে মাউস নিলে (ডেস্কটপে) বা লং প্রেস করলে ছোট <span className="font-bold">+</span> বাটন আসবে। সেখানে নোট লিখে রাখতে পারবেন।</span>
+                        <div className="flex gap-2 items-start">
+                            <span className="font-bold text-blue-500 min-w-[80px]">নোটস:</span>
+                            <span>বক্সের কোণায় থাকা ছোট <span className="font-bold">+</span> আইকনে (বা মাউস হভার করলে) ক্লিক করে গুরুত্বপূর্ণ নোট সেভ করে রাখুন।</span>
                         </div>
                     </div>
                 </div>
 
-                 {/* Section 4: Print & Offline */}
+                 {/* Section 4: Extra Features */}
                  <div className="space-y-3">
-                    <h4 className="text-sm font-bold uppercase tracking-wider text-slate-500 border-b border-slate-200 dark:border-white/10 pb-1">৪. এক্সট্রা ফিচার</h4>
-                    <ul className="text-xs space-y-1.5 list-disc pl-4 text-slate-600 dark:text-slate-400">
-                        <li><strong>Print Mode:</strong> সিলেবাসের উপরে "Print View" বাটনে চাপ দিলে একটি ক্লিন PDF ভার্সন পাবেন প্রিন্ট করার জন্য।</li>
-                        <li><strong>Countdown:</strong> পরীক্ষার ডেট সেট করতে টাইমারের উপরে <span className="inline-block px-1.5 py-0.5 rounded bg-slate-200 dark:bg-white/10 text-[10px]">⚙️</span> আইকনে ক্লিক করুন।</li>
-                        <li><strong>Offline Mode:</strong> একবার লোড হলে ইন্টারনেট ছাড়াও অ্যাপ কাজ করবে। ইন্টারনেট কানেক্ট হলে অটোমেটিক ডাটা সিঙ্ক হবে।</li>
+                    <h4 className="text-sm font-bold uppercase tracking-wider text-slate-500 border-b border-slate-200 dark:border-white/10 pb-1">৩. এক্সট্রা ফিচার</h4>
+                    <ul className="text-xs space-y-2 list-disc pl-4 text-slate-600 dark:text-slate-400">
+                        <li><strong>Print Mode:</strong> সিলেবাসের উপরে "Print View" বাটনে চাপ দিলে একটি ক্লিন PDF ভার্সন জেনারেট হবে। (Landscape মোডে প্রিন্ট করার পরামর্শ দেওয়া হলো)</li>
+                        <li><strong>Exam Countdown:</strong> পরীক্ষার ডেট সেট করতে টাইমারের উপরে <span className="inline-block px-1.5 py-0.5 rounded bg-slate-200 dark:bg-white/10 text-[10px]">⚙️</span> আইকনে ক্লিক করুন।</li>
+                        <li><strong>Data Sync:</strong> ইন্টারনেট থাকলে ডাটা অটোমেটিক সেভ হবে। লগআউট করার আগে "Online" স্ট্যাটাস দেখে নিন।</li>
                     </ul>
                 </div>
 
                 <div className="pt-2">
-                    <Button onClick={onClose} className="w-full py-3 shadow-lg shadow-blue-500/20">ধন্যবাদ, আমি বুঝতে পেরেছি!</Button>
+                    <Button onClick={onClose} className="w-full py-3 shadow-lg shadow-blue-500/20 font-bold">ধন্যবাদ, শুরু করা যাক!</Button>
                 </div>
             </div>
         </Modal>
