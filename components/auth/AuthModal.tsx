@@ -24,6 +24,8 @@ interface AuthModalProps {
 }
 
 export const AuthModal: React.FC<AuthModalProps> = (props) => {
+    const isDomainError = props.modalError && props.modalError.toLowerCase().includes('domain');
+
     return (
         <Modal isOpen={props.isOpen} onClose={props.onClose} title={props.modalMode === 'login' ? 'Sign In' : props.modalMode === 'create' ? 'Create Account' : 'Reset Password'}>
             <div className="flex flex-col gap-6">
@@ -43,10 +45,22 @@ export const AuthModal: React.FC<AuthModalProps> = (props) => {
                     handleUserAction={props.handleUserAction} handleGuestLogin={props.handleGuestLogin}
                     isChecking={props.isCheckingUser} error={props.modalError} success={props.modalSuccess}
                 />
+                
+                {/* Helpful Hint for Database Deletion Scenario */}
                 {props.modalError && (props.modalError.toLowerCase().includes('not found') || props.modalError.toLowerCase().includes('no user')) && (
                     <p className="text-[10px] text-center text-slate-500 animate-fade-in">
                         Database deleted? <button onClick={() => { props.setModalMode('create'); props.resetModalState(); }} className="text-blue-500 font-bold hover:underline">Create Account</button> again to restore.
                     </p>
+                )}
+
+                {/* Helpful Hint for Domain Authorization Scenario */}
+                {isDomainError && (
+                    <div className="text-[10px] p-2 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-700/50 rounded-lg text-amber-800 dark:text-amber-200 animate-fade-in">
+                        <strong>Deployment Issue:</strong> This domain is not authorized.
+                        <br/>
+                        Go to <a href="https://console.firebase.google.com" target="_blank" className="underline font-bold">Firebase Console</a> &gt; Authentication &gt; Settings &gt; Authorized Domains and add: <br/>
+                        <code className="bg-amber-100 dark:bg-black/30 px-1 py-0.5 rounded mt-1 block w-fit">{window.location.hostname}</code>
+                    </div>
                 )}
             </div>
         </Modal>

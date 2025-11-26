@@ -4,6 +4,10 @@ import firebase from 'firebase/compat/app';
 
 const FIREBASE_USER_COLLECTION = 'users';
 const DOMAIN = '@study-dashboard.com';
+
+// Robust ID sanitizer: replaces slashes and other invalid path characters with underscores
+const sanitizeId = (id: string) => id.replace(/[/#\?]/g, '_');
+
 const getEmail = (id: string) => id.includes('@') ? id : id + DOMAIN;
 
 const getErrorMessage = (error: any) => {
@@ -13,42 +17,48 @@ const getErrorMessage = (error: any) => {
     if (code === 'auth/wrong-password') return 'Incorrect password.';
     if (code === 'auth/email-already-in-use') return 'User ID/Email already exists.';
     if (code === 'auth/weak-password') return 'Password should be at least 6 characters.';
-    if (code === 'auth/unauthorized-domain') return 'Domain not allowed. Add this domain in Firebase Console > Authentication > Settings.';
+    if (code === 'auth/unauthorized-domain') return `Domain '${window.location.hostname}' is not authorized. Add it to Firebase Console.`;
+    if (code === 'auth/network-request-failed') return 'Network error. Check internet connection.';
     return error.message || 'Authentication failed.';
 };
 
-export const authenticateUser = async (id: string, pass: string) => {
+export const authenticateUser = async (rawId: string, pass: string) => {
     if (!firebaseAuth || !firestore) return { success: false, error: "Database not connected. Check internet." };
-    const email = getEmail(id);
+    const email = getEmail(rawId);
+    const id = sanitizeId(rawId); // Sanitize document key
+
     try {
         const result = await firebaseAuth.signInWithEmailAndPassword(email, pass);
         if (result.user) {
             // CRITICAL CHANGE: Use the 'id' (username) as the document key as per user request.
             // This ensures the database ID matches the username (e.g., 'astest') instead of the garbage UID.
+            // We use merge: true to avoid overwriting existing data if it exists.
             await firestore.collection(FIREBASE_USER_COLLECTION).doc(id).set({
-                data: { username: id, password: pass }
+                data: { username: rawId, password: pass } // Store original username
             }, { merge: true });
             
-            // Return the username (id) as the 'uid' for the app to use
+            // Return the sanitized username (id) as the 'uid' for the app to use
             return { success: true, uid: id };
         }
         return { success: false, error: "User info missing" };
     } catch (e: any) { return { success: false, error: getErrorMessage(e) }; }
 };
 
-export const createUser = async (id: string, pass: string) => {
+export const createUser = async (rawId: string, pass: string) => {
     if (!firebaseAuth || !firestore) return { success: false, error: "Database not connected. Check internet." };
+    const id = sanitizeId(rawId); // Sanitize document key
+    
     try {
-        const result = await firebaseAuth.createUserWithEmailAndPassword(getEmail(id), pass);
+        const result = await firebaseAuth.createUserWithEmailAndPassword(getEmail(rawId), pass);
         if (result.user) {
             // CRITICAL CHANGE: Use the 'id' (username) as the document key.
             await firestore.collection(FIREBASE_USER_COLLECTION).doc(id).set({
                 createdAt: new Date().toISOString(),
                 settings: DEFAULT_SETTINGS,
-                data: { username: id, password: pass }
+                data: { username: rawId, password: pass }
             }, { merge: true });
             
-            // Return the username (id) as the 'uid' for the app to use
+            // Return the sanitized username (id) as the 'uid' for the app to use
             return { success: true, uid: id };
         }
         return { success: false, error: "User creation failed" };

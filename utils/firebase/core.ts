@@ -15,7 +15,12 @@ try {
         firebaseApp = firebase.app(); // Use existing instance
     }
 
-    console.log("Firebase Initialized on:", window.location.hostname);
+    const hostname = window.location.hostname;
+    console.log(`%c App running on: ${hostname}`, 'background: #222; color: #bada55; padding: 4px; border-radius: 4px;');
+    
+    if (hostname !== 'localhost' && hostname !== '127.0.0.1') {
+        console.log(`%c IMPORTANT: If login fails, ensure 'https://${hostname}' is added to Firebase Console > Authentication > Settings > Authorized Domains`, 'color: orange; font-weight: bold;');
+    }
 
     firebaseAuth = firebase.auth();
     firestore = firebase.firestore();
@@ -29,14 +34,14 @@ try {
         // This might fail if multiple tabs are open, which is expected and handled
         firestore.enablePersistence({ synchronizeTabs: true }).catch(err => {
             if (err.code === 'failed-precondition') {
-                 console.warn('Persistence failed: Multiple tabs open.');
+                 console.warn('Persistence warning: Multiple tabs open. Persistence disabled for this tab.');
             } else if (err.code === 'unimplemented') {
-                 console.warn('Persistence not supported by browser.');
+                 console.warn('Persistence warning: Browser does not support offline persistence.');
             }
         });
     }
 } catch (error) {
-    console.error("CRITICAL: Firebase Initialization Failed", error);
+    console.error("CRITICAL: Firebase Initialization Failed. Check your configuration.", error);
 }
 
 export { firebaseApp, firestore, firebaseAuth, firebase };
