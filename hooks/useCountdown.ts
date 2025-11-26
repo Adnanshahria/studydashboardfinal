@@ -1,27 +1,38 @@
 import { useState, useEffect } from 'react';
 
-export const useCountdown = (targetDate: string | undefined) => {
-    const [countdown, setCountdown] = useState<{ d: number; h: number; m: number } | null>(null);
+export interface CountdownResult {
+    d: number;
+    h: number;
+    m: number;
+    isPast: boolean;
+}
+
+export const useCountdown = (targetDate: string | undefined): CountdownResult | null => {
+    const [countdown, setCountdown] = useState<CountdownResult | null>(null);
 
     useEffect(() => {
-        const calculate = () => {
+        const calculate = (): CountdownResult | null => {
             if (!targetDate) return null;
             const targetTime = new Date(targetDate).getTime();
             
-            // CRITICAL FIX: Handle invalid date strings
+            // Handle invalid date strings
             if (isNaN(targetTime)) return null;
 
-            const diff = targetTime - new Date().getTime();
-            if (diff < 0) { return null; }
+            const now = new Date().getTime();
+            const diff = targetTime - now;
+            
+            // Calculate absolute difference to support both countdown and count-up
+            const absDiff = Math.abs(diff);
             
             return {
-                d: Math.floor(diff / 864e5),
-                h: Math.floor((diff % 864e5) / 36e5),
-                m: Math.floor((diff % 36e5) / 60000)
+                d: Math.floor(absDiff / 864e5),
+                h: Math.floor((absDiff % 864e5) / 36e5),
+                m: Math.floor((absDiff % 36e5) / 60000),
+                isPast: diff < 0
             };
         };
 
-        setCountdown(calculate()); // Initial calculation
+        setCountdown(calculate());
 
         const interval = setInterval(() => {
             setCountdown(calculate());

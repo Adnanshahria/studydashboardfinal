@@ -1,7 +1,8 @@
-import { useEffect, useState } from 'react';
+
+import React, { useEffect, useState, useRef } from 'react';
 import { UserData, UserSettings } from '../../types';
 import { DEFAULT_SETTINGS, INITIAL_SYLLABUS_DATA } from '../../constants';
-import { openDB, dbPut, dbClear, initFirebase } from '../../utils/storage';
+import { dbPut, dbGet, initFirebase } from '../../utils/storage';
 
 export const useDataSync = (
     userId: string | null,
@@ -13,22 +14,43 @@ export const useDataSync = (
 ) => {
     const [isLoading, setIsLoading] = useState(false);
     const [connectionStatus, setConnectionStatus] = useState<'connected' | 'disconnected'>('disconnected');
+    const isMounted = useRef(true);
+
+    useEffect(() => {
+        isMounted.current = true;
+        return () => { isMounted.current = false; };
+    }, []);
 
     useEffect(() => {
         if (!userId) return;
-        setIsLoading(true);
+
         let unsub: () => void = () => {};
         
-        const init = async () => {
+        const syncProcess = async () => {
+            if (isMounted.current) setIsLoading(true);
+
             try {
-                // Initialize IndexedDB but don't block heavily
-                await openDB().catch(e => console.warn("IndexedDB init warning:", e));
-                
-                unsub = await initFirebase(userId, (remoteData, remoteSettings) => {
+                const [cachedData, cachedSettings] = await Promise.all([
+                    dbGet('main'),
+                    dbGet('settings')
+                ]);
+
+                if (isMounted.current && (cachedData || cachedSettings)) {
+                    if (cachedData) setUserData(prev => ({ ...prev, ...cachedData }));
+                    if (cachedSettings) setSettings(prev => ({ ...prev, ...cachedSettings }));
+                    setIsLoading(false); 
+                }
+            } catch (e) {
+                console.warn("Local cache load failed", e);
+            }
+
+            try {
+                const unsubscribe = await initFirebase(userId, (remoteData, remoteSettings) => {
+                    if (!isMounted.current) return;
+                    
                     if (remoteData) {
                         setUserData(prev => ({ ...prev, ...remoteData }));
-                        // Save to IndexedDB in background, don't await
-                        dbPut('userData', { id: 'main', value: remoteData }).catch(e => console.warn(e));
+                        dbPut('userData', { id: 'main', value: remoteData }).catch(console.warn);
                     }
                     if (remoteSettings) {
                         setSettings(prev => {
@@ -38,23 +60,28 @@ export const useDataSync = (
                                 subjectConfigs: remoteSettings.subjectConfigs || {},
                                 subjectWeights: remoteSettings.subjectWeights || {}
                             };
-                            // Save to IndexedDB in background
-                            dbPut('userData', { id: 'settings', value: merged }).catch(e => console.warn(e));
+                            dbPut('userData', { id: 'settings', value: merged }).catch(console.warn);
                             return merged;
                         });
                     }
                     setIsLoading(false);
-                }, (status) => setConnectionStatus(status), localSettingsRef.current, localDataRef.current);
-            } catch (e) { 
-                console.error("Sync initialization failed", e); 
-                setIsLoading(false); 
-                // Don't disconnect immediately on minor errors, keep trying
+                }, (status) => {
+                    if (isMounted.current) setConnectionStatus(status);
+                });
+                
+                if (isMounted.current) unsub = unsubscribe;
+                else unsubscribe(); // Cleanup immediately if unmounted during await
+                
+            } catch (e) {
+                console.error("Sync init failed", e);
+                if (isMounted.current) setIsLoading(false);
             }
         };
-        init();
-        return () => { 
-            if (unsub) unsub(); 
-            // We don't force logout on unmount to preserve state during hot reloads
+
+        syncProcess();
+        
+        return () => {
+            unsub();
         };
     }, [userId]);
 

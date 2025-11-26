@@ -1,3 +1,4 @@
+import React from 'react';
 import { UserData, UserSettings } from '../../types';
 import { saveUserProgress, saveSettings, cleanupStorage } from '../../utils/storage';
 import { DEFAULT_SETTINGS } from '../../constants';

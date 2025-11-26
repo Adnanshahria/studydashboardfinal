@@ -15,15 +15,27 @@ export const initFirebase = async (
     try {
         if (!firestore) throw new Error("Firestore not initialized");
         if (!uid) throw new Error("No UID");
+        
         onStatus('connected');
         
-        await ensureUserDoc(uid, localSettingsToMigrate || DEFAULT_SETTINGS, localDataToMigrate);
-        
+        // OPTIMIZATION: Removed the blocking 'await ensureUserDoc' here.
+        // Instead, we immediately start listening. If the doc doesn't exist,
+        // the snapshot listener will tell us, and we create it then.
+        // This saves 1 network round-trip (~300-800ms).
+
         const unsub = firestore.collection(FIREBASE_USER_COLLECTION).doc(uid).onSnapshot((docSnap) => {
             if (docSnap.exists) {
                 const val = docSnap.data();
                 onData(val?.data || {}, val?.settings || null);
-            } else { onData(null, null); }
+            } else {
+                // Doc doesn't exist? Create it now (Lazy Creation)
+                // We pass true for 'merge' implicitly via ensureUserDoc to avoid overwrites
+                ensureUserDoc(uid, localSettingsToMigrate || DEFAULT_SETTINGS, localDataToMigrate).then(() => {
+                   // After creating, we might want to manually trigger onData with defaults
+                   // so the UI doesn't wait for the next snapshot
+                   onData(localDataToMigrate || {}, localSettingsToMigrate || DEFAULT_SETTINGS);
+                });
+            }
         }, (error) => { 
             console.error("Firestore listener error", error); 
             onStatus('disconnected'); 

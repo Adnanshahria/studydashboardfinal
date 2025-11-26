@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { UserData, UserSettings, TrackableItem } from '../../types';
 import { PaperHeader } from './paper/PaperHeader';
@@ -13,7 +14,7 @@ export const PaperSection: React.FC<Props> = ({ paper, activeSubject, userData, 
     const { onTogglePaper, setRenameModal, onDeleteColumn, setAddColumnModal, setAddChapterModal, toggleEdit } = actions;
     
     return (
-        <div className="group glass-panel rounded-3xl overflow-hidden border border-slate-200 dark:border-white/5 shadow-sm print:border print:shadow-none print:rounded-lg">
+        <div className="group glass-panel rounded-3xl overflow-hidden shadow-sm print:border print:shadow-none print:rounded-lg">
             <PaperHeader 
                 paper={paper} pVal={pVal} isOpen={isOpen} activeSubject={activeSubject} 
                 onTogglePaper={onTogglePaper} editMode={editMode} onToggleEdit={toggleEdit} 

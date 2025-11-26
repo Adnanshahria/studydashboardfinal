@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { UserSettings, TrackableItem } from '../../types';
 
@@ -23,7 +24,17 @@ export const useHeroLogic = (
         setWeightTotal(currentConfigItems.reduce((acc, item) => acc + (tempWeights[item.key] || 0), 0));
     }, [tempWeights, currentConfigItems]);
 
-    const handleWeightChange = (key: string, val: string) => setTempWeights(prev => ({ ...prev, [key]: Math.min(100, Math.max(0, parseInt(val) || 0)) }));
+    const handleWeightChange = (key: string, val: string) => {
+        // Use parseFloat to allow decimals (e.g. 12.5)
+        // Allow empty string to let user backspace to clear input
+        if (val === '') {
+             setTempWeights(prev => ({ ...prev, [key]: 0 }));
+             return;
+        }
+        const parsed = parseFloat(val);
+        const safeVal = isNaN(parsed) ? 0 : Math.min(100, Math.max(0, parsed));
+        setTempWeights(prev => ({ ...prev, [key]: safeVal }));
+    };
     
     const saveWeights = () => { 
         if (weightTotal === 100) { 

@@ -11,6 +11,7 @@ interface SettingsMenuProps {
     theme: 'dark' | 'light';
     onOpenGuide: () => void;
     onOpenDevModal: () => void;
+    onOpenAppearance: () => void;
 }
 
 export const SettingsMenu: React.FC<SettingsMenuProps> = (props) => {

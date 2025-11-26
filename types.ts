@@ -37,6 +37,7 @@ export interface ProgressBarConfig {
 export interface UserSettings {
   theme: 'dark' | 'light';
   soundVolume: number;
+  glowColor: 'red' | 'green' | 'violet' | 'none'; // New Setting
   weights: WeightConfig;
   subjectWeights?: Record<string, WeightConfig>;
   progressBars: ProgressBarConfig[];

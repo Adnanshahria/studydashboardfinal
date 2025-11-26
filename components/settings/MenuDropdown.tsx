@@ -9,10 +9,11 @@ interface MenuDropdownProps {
     onToggleTheme: () => void;
     onOpenGuide: () => void;
     onOpenDevModal: () => void;
+    onOpenAppearance: () => void; // New prop
     onClose: () => void;
 }
 
-export const MenuDropdown: React.FC<MenuDropdownProps> = ({ userId, userData, theme, onLogout, onToggleTheme, onOpenGuide, onOpenDevModal, onClose }) => {
+export const MenuDropdown: React.FC<MenuDropdownProps> = ({ userId, userData, theme, onLogout, onToggleTheme, onOpenGuide, onOpenDevModal, onOpenAppearance, onClose }) => {
     const MenuItem = ({ onClick, icon, text, subtext, colorClass }: any) => (
         <button onClick={() => { onClick(); onClose(); }} className="flex items-center gap-3 px-4 py-3 text-sm font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-white/10 rounded-xl transition-colors text-left group">
             <span className={`p-1.5 rounded-lg ${colorClass} transition-colors`}>{icon}</span>
@@ -34,9 +35,15 @@ export const MenuDropdown: React.FC<MenuDropdownProps> = ({ userId, userData, th
                     <p className="text-sm font-bold text-slate-800 dark:text-white truncate max-w-[180px]" title={displayName}>{displayName}</p>
                 </div>
             </div>
+            
             <MenuItem onClick={onOpenGuide} icon="📖" text="App Guide" subtext="(গাইড)" colorClass="bg-blue-100 dark:bg-blue-500/20 text-blue-600 group-hover:bg-blue-200 dark:group-hover:bg-blue-500/30" />
+            
+            {/* New Appearance Option */}
+            <MenuItem onClick={onOpenAppearance} icon="🎨" text="Appearance" colorClass="bg-pink-100 dark:bg-pink-500/20 text-pink-600 group-hover:bg-pink-200 dark:group-hover:bg-pink-500/30" />
+            
             <MenuItem onClick={onToggleTheme} icon={theme === 'dark' ? '☀️' : '🌙'} text={theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'} colorClass="bg-amber-100 dark:bg-purple-500/20 text-amber-600 dark:text-purple-400 group-hover:bg-amber-200 dark:group-hover:bg-purple-500/30" />
             <MenuItem onClick={onOpenDevModal} icon="👨‍💻" text="Developer Info" colorClass="bg-emerald-100 dark:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 group-hover:bg-emerald-200 dark:group-hover:bg-emerald-500/30" />
+            
             {userId && (
                 <>
                     <div className="h-px bg-slate-200 dark:bg-white/10 my-1 mx-2"></div>

@@ -1,11 +1,18 @@
+
 const DB_NAME = 'AS_Study_Dashboard';
 const STORE_NAME = 'userData';
 
 let db: IDBDatabase | null = null;
+let connectionPromise: Promise<IDBDatabase> | null = null;
 
 export const openDB = (): Promise<IDBDatabase> => {
-  return new Promise((resolve, reject) => {
-    if (typeof indexedDB === 'undefined') { resolve({} as any); return; }
+  if (typeof indexedDB === 'undefined') return Promise.resolve({} as any);
+  if (db) return Promise.resolve(db);
+  
+  // Singleton Promise to prevent multiple simultaneous open requests
+  if (connectionPromise) return connectionPromise;
+
+  connectionPromise = new Promise((resolve, reject) => {
     const request = indexedDB.open(DB_NAME, 2);
     
     request.onupgradeneeded = (event) => {
@@ -17,37 +24,47 @@ export const openDB = (): Promise<IDBDatabase> => {
     
     request.onsuccess = (event) => {
       const database = (event.target as IDBOpenDBRequest).result;
-      db = database; // CRITICAL FIX: Assign to global variable
+      db = database;
       resolve(database);
     };
     
-    request.onerror = (e) => reject(e); 
+    request.onerror = (e) => {
+        console.warn("IndexedDB Open Error:", e);
+        connectionPromise = null; // Reset on failure
+        reject(e); 
+    };
   });
+  
+  return connectionPromise;
 };
 
 export const dbPut = async (storeName: string, data: { id: string; value: any }) => {
   try {
-      if (!db) db = await openDB();
-      if (!db) return;
-
-      // Implemented specific store check, defaulting to the main STORE_NAME if matches or generic usage
-      const targetStore = storeName === STORE_NAME ? STORE_NAME : STORE_NAME; 
-      
-      const transaction = db.transaction([targetStore], 'readwrite');
-      const store = transaction.objectStore(targetStore);
+      const database = await openDB();
+      const transaction = database.transaction([STORE_NAME], 'readwrite');
+      const store = transaction.objectStore(STORE_NAME);
       store.put(data);
   } catch (e) { console.error("IndexedDB Put Error", e); }
 };
 
+export const dbGet = async (id: string): Promise<any> => {
+    try {
+        const database = await openDB();
+        return new Promise((resolve) => {
+            const transaction = database.transaction([STORE_NAME], 'readonly');
+            const store = transaction.objectStore(STORE_NAME);
+            const request = store.get(id);
+            request.onsuccess = () => resolve(request.result ? request.result.value : null);
+            request.onerror = () => resolve(null);
+        });
+    } catch (e) { return null; }
+};
+
 export const dbClear = async (storeName: string) => {
   try {
-      if (!db) db = await openDB();
-      if (!db) return;
-      
-      const targetStore = storeName === STORE_NAME ? STORE_NAME : STORE_NAME;
-      
-      const transaction = db.transaction([targetStore], 'readwrite');
-      const store = transaction.objectStore(targetStore);
+      const database = await openDB();
+      const transaction = database.transaction([STORE_NAME], 'readwrite');
+      const store = transaction.objectStore(STORE_NAME);
       store.clear();
   } catch (e) { console.error("IndexedDB Clear Error", e); }
 };
@@ -56,5 +73,6 @@ export const cleanupStorage = () => {
     if (db) {
         db.close();
         db = null;
+        connectionPromise = null;
     }
 };

@@ -1,3 +1,4 @@
+
 import { UserSettings, ProgressBarConfig } from '../types';
 import { INITIAL_SYLLABUS_DATA, TRACKABLE_ITEMS } from './data';
 
@@ -10,6 +11,7 @@ export const DEFAULT_PROGRESS_CONFIG: ProgressBarConfig[] = [
 export const DEFAULT_SETTINGS: UserSettings = {
   theme: 'dark',
   soundVolume: 0.3,
+  glowColor: 'green', // Default Glow changed to Green
   weights: {
     mainbook: 15, class: 10, revclass: 10, meditrics: 10,
     mqb: 25, sfexam: 10, rev1: 10, rev2: 10
