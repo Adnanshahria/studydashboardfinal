@@ -42,7 +42,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeSubject, onChangeSubject
     const handleRename = () => { if(modals.rename) { onUpdateSettings({ ...settings, customNames: { ...settings.customNames, [modals.rename.key]: modals.rename.name } }); setModals({ ...modals, rename: null }); }};
 
     return (
-        <aside className="flex flex-col gap-4 h-full lg:overflow-hidden">
+        <aside className="flex flex-col gap-4 h-full lg:overflow-y-auto custom-scrollbar pr-1">
             {/* ROW 1: Progress & Countdown */}
             <div className="grid grid-cols-2 gap-3 shrink-0">
                 <ProgressCard 
@@ -66,8 +66,11 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeSubject, onChangeSubject
                 />
             </div>
 
-            {/* ROW 3: Subjects List (Remaining Space, Scrollable) */}
-            <div className="glass-panel rounded-3xl flex-1 min-h-0 flex flex-col overflow-hidden shadow-sm">
+            {/* ROW 3: Subjects List (Fixed Height 500px) */}
+            <div 
+                className="glass-panel rounded-3xl flex flex-col overflow-hidden shadow-sm shrink-0"
+                style={{ height: '500px' }}
+            >
                 <div className="pt-5 px-5 shrink-0">
                     <SidebarHeader isEditing={isEditingSubjects} setIsEditing={setIsEditingSubjects} setModals={setModals} />
                 </div>
