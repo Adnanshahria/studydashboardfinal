@@ -16,7 +16,7 @@ interface Props {
 
 export const SidebarSubjectList: React.FC<Props> = ({ settings, activeSubject, isEditing, userData, onChangeSubject, setModals, onUpdateSettings, onDeleteSubject }) => {
     return (
-        <div className="flex flex-col gap-3 max-h-[400px] overflow-y-auto custom-scrollbar pr-1">
+        <div className="flex flex-col gap-3 pr-1">
             {(Object.entries(settings.syllabus) as [string, SubjectData][]).map(([key, data]) => (
                 <SubjectItem 
                     key={key} subKey={key} data={data} 

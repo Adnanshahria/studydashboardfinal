@@ -1,4 +1,5 @@
-import { firestore } from './core';
+
+import { firestore, firebaseAuth } from './core';
 import { UserData, UserSettings } from '../../types';
 import { DEFAULT_SETTINGS } from '../../constants';
 
@@ -20,7 +21,17 @@ export const sanitize = (obj: any): any => {
 };
 
 export const ensureUserDoc = async (uid: string, initialSettings?: UserSettings, initialData?: UserData) => {
-    if (!firestore || !uid) return;
+    if (!firestore || !uid) return false;
+
+    // SAFETY GUARD: Garbage Data Prevention
+    // If the 'uid' argument is the raw Firebase Auth UID, but the user actually has a 
+    // Custom ID (displayName), we must abort. This happens during race conditions.
+    const currentUser = firebaseAuth.currentUser;
+    if (currentUser && currentUser.uid === uid && currentUser.displayName && currentUser.displayName !== uid) {
+        console.warn("🛑 Prevented creation of garbage document for raw UID. Waiting for Custom ID.");
+        return false;
+    }
+
     const ref = firestore.collection(FIREBASE_USER_COLLECTION).doc(uid);
     try {
         const snap = await ref.get();
@@ -32,8 +43,7 @@ export const ensureUserDoc = async (uid: string, initialSettings?: UserSettings,
                 settings: sanitize(initialSettings || DEFAULT_SETTINGS)
             };
 
-            // CRITICAL FIX: Only overwrite/merge 'data' if we actually have local data to migrate.
-            // Otherwise, we leave the existing 'data' field (which might contain password/username) alone.
+            // Only overwrite/merge 'data' if we actually have local data to migrate.
             if (initialData && Object.keys(initialData).length > 0) {
                 payload.data = sanitize(initialData);
             }

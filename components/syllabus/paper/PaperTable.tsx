@@ -18,7 +18,7 @@ interface Props {
 }
 
 export const PaperTable: React.FC<Props> = ({ paper, chapters, allItems, userData, activeSubject, editMode, actions, setRenameModal, onDeleteColumn, setAddColumnModal, setAddChapterModal }) => (
-    <div className="overflow-auto custom-scrollbar max-h-[60vh] md:max-h-[70vh] relative print:max-h-none print:overflow-visible">
+    <div className="overflow-x-auto lg:overflow-y-auto custom-scrollbar lg:max-h-[70vh] relative print:max-h-none print:overflow-visible">
         <table className="w-full text-left border-collapse min-w-[700px] md:min-w-[900px] print:min-w-0">
             <thead className="sticky top-0 z-30 print:static">
                 <tr className="text-[10px] uppercase tracking-wider text-slate-500 dark:text-slate-500 border-b border-slate-200 bg-slate-100 dark:bg-[#0f172a] shadow-sm print:bg-white">

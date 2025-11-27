@@ -6,6 +6,7 @@ import { useSyncActions } from './sync/useSyncActions';
 import { useDataSync } from './sync/useDataSync';
 import { useDataMigration } from './sync/useDataMigration';
 import { firebaseAuth } from '../utils/firebase/core';
+import firebase from 'firebase/compat/app';
 
 export const useFirebaseSync = () => {
     const [userData, setUserData] = useState<UserData>({});
@@ -22,6 +23,27 @@ export const useFirebaseSync = () => {
     useEffect(() => { localDataRef.current = userData; }, [userData]);
     useEffect(() => { localSettingsRef.current = settings; }, [settings]);
     
+    // Helper to wait for the custom ID (displayName) to appear
+    const waitForCustomId = async (user: firebase.User): Promise<string> => {
+        if (user.displayName) return user.displayName;
+
+        // Poll for up to 2.5 seconds (5 attempts)
+        console.log("⏳ Waiting for Custom ID...");
+        for (let i = 0; i < 5; i++) {
+            await new Promise(resolve => setTimeout(resolve, 500));
+            await user.reload();
+            // Need to get the refreshed object from auth
+            const refreshed = firebaseAuth.currentUser;
+            if (refreshed?.displayName) {
+                console.log("✅ Custom ID found:", refreshed.displayName);
+                return refreshed.displayName;
+            }
+        }
+
+        console.warn("⚠️ Custom ID timeout. Falling back to UID.");
+        return user.uid;
+    };
+
     useEffect(() => { 
         setUserData({}); 
         setSettings(DEFAULT_SETTINGS); 
@@ -35,24 +57,9 @@ export const useFirebaseSync = () => {
         const unsubscribe = firebaseAuth.onAuthStateChanged(async (user) => {
             if (user) {
                 // RACE CONDITION FIX:
-                // New users (Guest or Created) might have their `displayName` set asynchronously.
-                // If we use `user.uid` immediately, we might create a garbage document.
-                // We attempt to reload the user metadata to ensure we get the fresh displayName (Custom ID).
-                
-                let finalId = user.displayName;
-                
-                if (!finalId) {
-                    try {
-                        await user.reload();
-                        // Re-fetch current user after reload
-                        const refreshedUser = firebaseAuth.currentUser;
-                        finalId = refreshedUser?.displayName || refreshedUser?.uid || user.uid;
-                    } catch (e) {
-                        console.warn("User reload failed, falling back to UID", e);
-                        finalId = user.uid;
-                    }
-                }
-
+                // We await the polling function to ensure we get the 'guest_...' or 'username' ID
+                // instead of the raw Firebase UID.
+                const finalId = await waitForCustomId(user);
                 setUserId(finalId);
             } else {
                 setUserId(null);
@@ -66,12 +73,10 @@ export const useFirebaseSync = () => {
 
     const actions = useSyncActions(userId, userData, setUserData, settings, setSettings, localDataRef, localSettingsRef, setUserId);
     
-    // Pass syncKey to useDataSync so changing it triggers the sync process again
     const { isLoading, connectionStatus } = useDataSync(userId, setUserData, setSettings, localSettingsRef, localDataRef, actions.handleLogout, syncKey);
 
     useDataMigration(userData, setUserData, settings, userId);
 
-    // Force Sync Function: Just incrementing key triggers useDataSync useEffect
     const forceSync = () => {
         setSyncKey(prev => prev + 1);
     };

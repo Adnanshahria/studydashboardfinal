@@ -18,7 +18,7 @@ interface MenuDropdownProps {
 export const MenuDropdown: React.FC<MenuDropdownProps> = ({ userId, userData, theme, onLogout, onToggleTheme, onOpenGuide, onOpenDevModal, onOpenAppearance, onForceSync, onClose }) => {
     const [isSyncing, setIsSyncing] = useState(false);
 
-    const MenuItem = ({ onClick, icon, text, subtext, colorClass, disabled = false }: any) => (
+    const MenuItem = ({ onClick, icon, text, colorClass, disabled = false }: any) => (
         <button 
             onClick={(e) => { if(!disabled) { onClick(e); if(!disabled) onClose(); } }} 
             disabled={disabled}
@@ -27,7 +27,6 @@ export const MenuDropdown: React.FC<MenuDropdownProps> = ({ userId, userData, th
             <span className={`p-1.5 rounded-lg ${colorClass} transition-colors shadow-sm`}>{icon}</span>
             <div className="flex flex-col leading-none">
                 <span>{text}</span>
-                {subtext && <span className="text-[9px] opacity-60 mt-0.5 font-normal">{subtext}</span>}
             </div>
         </button>
     );
@@ -61,8 +60,8 @@ export const MenuDropdown: React.FC<MenuDropdownProps> = ({ userId, userData, th
 
                 <div className="bg-slate-50/50 dark:bg-white/5 rounded-2xl p-1 border border-slate-200/50 dark:border-white/5 shadow-sm">
                     <div className="px-3 py-1 text-[10px] font-bold text-slate-400 uppercase tracking-wider">General</div>
-                    <MenuItem onClick={onOpenGuide} icon="📖" text="App Guide" subtext="গাইড দেখুন" colorClass="bg-blue-100 dark:bg-blue-500/20 text-blue-600" />
-                    <MenuItem onClick={onOpenAppearance} icon="🎨" text="Appearance" subtext="Theme & Glow" colorClass="bg-pink-100 dark:bg-pink-500/20 text-pink-600" />
+                    <MenuItem onClick={onOpenGuide} icon="📖" text="App Guide" colorClass="bg-blue-100 dark:bg-blue-500/20 text-blue-600" />
+                    <MenuItem onClick={onOpenAppearance} icon="🎨" text="Appearance" colorClass="bg-pink-100 dark:bg-pink-500/20 text-pink-600" />
                 </div>
 
                 <div className="bg-slate-50/50 dark:bg-white/5 rounded-2xl p-1 border border-slate-200/50 dark:border-white/5 shadow-sm">
@@ -71,11 +70,10 @@ export const MenuDropdown: React.FC<MenuDropdownProps> = ({ userId, userData, th
                         onClick={handleForceSync} 
                         icon={isSyncing ? "⏳" : "🔄"} 
                         text={isSyncing ? "Syncing..." : "Force Sync"} 
-                        subtext={isSyncing ? "Connecting..." : "Refresh Data"} 
                         colorClass="bg-amber-100 dark:bg-amber-500/20 text-amber-600"
                         disabled={isSyncing}
                     />
-                    <MenuItem onClick={onOpenDevModal} icon="👨‍💻" text="Developer Info" subtext="Contact & Version" colorClass="bg-emerald-100 dark:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400" />
+                    <MenuItem onClick={onOpenDevModal} icon="👨‍💻" text="Developer Info" colorClass="bg-emerald-100 dark:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400" />
                 </div>
 
                 {userId && (

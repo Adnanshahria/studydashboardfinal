@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { CompositeData, UserSettings } from '../types';
 import { ProgressCard } from './hero/ProgressCard';
@@ -25,7 +26,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ compositeData, setting
     return (
         <section className="grid grid-cols-1 lg:grid-cols-4 gap-6 mb-8 print:hidden items-start">
             <div className="lg:col-span-3">
-                <ProgressCard compositeData={compositeData} isEditing={logic.isEditingWeights} onToggleEdit={() => logic.setIsEditingWeights(!logic.isEditingWeights)}>
+                <ProgressCard compositeData={compositeData} isEditing={logic.isEditingWeights} onEdit={() => logic.setIsEditingWeights(!logic.isEditingWeights)}>
                     <WeightsEditor 
                         settings={settings}
                         selectedSubject={logic.selectedSubject} setSelectedSubject={logic.setSelectedSubject}

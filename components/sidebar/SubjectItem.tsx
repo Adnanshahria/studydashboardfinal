@@ -40,8 +40,8 @@ export const SubjectItem: React.FC<Props> = ({ subKey, data, isActive, isEditing
         icon: 'bg-slate-100 dark:bg-white/5'
     };
     
-    // FIX: Fixed 4-column layout. 4th column (24px) is always reserved for the delete button.
-    // This prevents the middle content column from resizing when the delete button appears/disappears.
+    // FIX: Strictly defined grid columns.
+    // 40px (Icon) | Fluid Text | 45px (Percent) | 24px (Delete Button Space)
     const gridStyle = { gridTemplateColumns: '40px minmax(0, 1fr) 45px 24px' };
 
     return (
@@ -52,10 +52,10 @@ export const SubjectItem: React.FC<Props> = ({ subKey, data, isActive, isEditing
         >
             {isActive && <div className={`absolute left-0 top-0 bottom-0 w-1 ${styles.bar}`}></div>}
             
-            {/* 1. Icon: Fixed */}
+            {/* 1. Icon */}
             <div className={`w-10 h-10 rounded-xl flex items-center justify-center text-xl transition-colors shrink-0 ${styles.icon}`}>{data.icon}</div>
             
-            {/* 2. Content: Fluid */}
+            {/* 2. Content */}
             <div className="flex flex-col justify-center gap-1.5 min-w-0">
                 <div className="flex items-center gap-2 w-full">
                     <span className={`font-bold text-sm truncate w-full ${styles.text}`} title={displayName}>{displayName}</span>
@@ -66,12 +66,12 @@ export const SubjectItem: React.FC<Props> = ({ subKey, data, isActive, isEditing
                 </div>
             </div>
 
-            {/* 3. Percentage: Fixed */}
+            {/* 3. Percentage */}
             <div className="text-right flex items-center justify-end shrink-0">
                 <span className={`text-xs font-mono font-bold ${styles.text}`}>{progress.overall.toFixed(0)}%</span>
             </div>
 
-            {/* 4. Delete Btn: Fixed Reserved Space */}
+            {/* 4. Delete Btn - Always reserves 24px space in grid layout */}
             <div className="flex items-center justify-center shrink-0 w-6">
                 {isEditing && (
                     <button 
