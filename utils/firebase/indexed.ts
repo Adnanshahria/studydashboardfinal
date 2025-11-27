@@ -6,7 +6,12 @@ let db: IDBDatabase | null = null;
 let connectionPromise: Promise<IDBDatabase> | null = null;
 
 export const openDB = (): Promise<IDBDatabase> => {
-  if (typeof indexedDB === 'undefined') return Promise.resolve({} as any);
+  // CRITICAL FIX: Reject if IndexedDB is missing instead of resolving empty object
+  // This allows dbPut/dbGet catch blocks to handle the failure gracefully
+  if (typeof indexedDB === 'undefined') {
+      return Promise.reject("IndexedDB not supported in this environment");
+  }
+  
   if (db) return Promise.resolve(db);
   
   // Singleton Promise to prevent multiple simultaneous open requests
@@ -44,7 +49,10 @@ export const dbPut = async (storeName: string, data: { id: string; value: any })
       const transaction = database.transaction([STORE_NAME], 'readwrite');
       const store = transaction.objectStore(STORE_NAME);
       store.put(data);
-  } catch (e) { console.error("IndexedDB Put Error", e); }
+  } catch (e) { 
+      // Gracefully fail if IDB is unavailable
+      // console.debug("IndexedDB Put skipped:", e); 
+  }
 };
 
 export const dbGet = async (id: string): Promise<any> => {
@@ -57,7 +65,10 @@ export const dbGet = async (id: string): Promise<any> => {
             request.onsuccess = () => resolve(request.result ? request.result.value : null);
             request.onerror = () => resolve(null);
         });
-    } catch (e) { return null; }
+    } catch (e) { 
+        // Gracefully return null if IDB is unavailable
+        return null; 
+    }
 };
 
 export const dbClear = async (storeName: string) => {
@@ -66,7 +77,9 @@ export const dbClear = async (storeName: string) => {
       const transaction = database.transaction([STORE_NAME], 'readwrite');
       const store = transaction.objectStore(STORE_NAME);
       store.clear();
-  } catch (e) { console.error("IndexedDB Clear Error", e); }
+  } catch (e) { 
+      // Gracefully fail
+  }
 };
 
 export const cleanupStorage = () => {

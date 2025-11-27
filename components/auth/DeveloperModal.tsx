@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Modal } from '../ui/Modal';
 import { Button } from '../ui/Button';
@@ -30,7 +31,7 @@ export const DeveloperModal: React.FC<DeveloperModalProps> = ({ isOpen, onClose 
                     </div>
                     <div className="p-4 bg-slate-50 dark:bg-white/5 rounded-2xl border border-slate-200 dark:border-white/10">
                         <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">Version</label>
-                        <div className="text-sm font-mono text-slate-700 dark:text-slate-200">v38.3.3 (prime)</div>
+                        <div className="text-sm font-mono text-slate-700 dark:text-slate-200">v38.3.6 (prime)</div>
                     </div>
                 </div>
 
