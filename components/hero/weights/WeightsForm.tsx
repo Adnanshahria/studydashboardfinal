@@ -30,7 +30,7 @@ export const WeightsForm: React.FC<Props> = ({ settings, selectedSubject, setSel
                 <div key={item.key} className="flex flex-col gap-1">
                     <label className="text-[10px] text-slate-500 dark:text-slate-400 uppercase truncate font-semibold" title={item.name}>{item.name}</label>
                     <div className="relative">
-                        <input type="number" value={tempWeights[item.key] || 0} onChange={(e) => handleWeightChange(item.key, e.target.value)} className="w-full bg-transparent border border-slate-300 dark:border-white/20 rounded-lg px-2 py-1 text-xs text-slate-800 dark:text-white" />
+                        <input type="number" value={tempWeights[item.key] ?? ''} onChange={(e) => handleWeightChange(item.key, e.target.value)} className="w-full bg-transparent border border-slate-300 dark:border-white/20 rounded-lg px-2 py-1 text-xs text-slate-800 dark:text-white" />
                         <span className="absolute right-2 top-1/2 -translate-y-1/2 text-[10px] text-slate-400">%</span>
                     </div>
                 </div>

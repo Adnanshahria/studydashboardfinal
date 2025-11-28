@@ -57,7 +57,7 @@ export const createUser = async (rawId: string, pass: string) => {
 };
 
 export const loginAnonymously = async () => {
-    if (!firebaseAuth) return { success: false, error: "Firebase Auth not initialized" };
+    if (!firebaseAuth || !firestore) return { success: false, error: "Firebase not initialized. Check connection." };
     try {
         const result = await firebaseAuth.signInAnonymously();
 
@@ -73,6 +73,9 @@ export const loginAnonymously = async () => {
 
             // CRITICAL: Set Auth Profile to use Guest ID
             await result.user.updateProfile({ displayName: guestDisplayName });
+            
+            // Ensure profile update has propagated before continuing
+            await result.user.reload();
 
             // Save to Firestore under the Guest ID
             await firestore.collection(FIREBASE_USER_COLLECTION).doc(guestDisplayName).set({
@@ -84,7 +87,10 @@ export const loginAnonymously = async () => {
             return { success: true, uid: guestDisplayName };
         }
         return { success: false, error: "Guest session failed to start" };
-    } catch (e: any) { return { success: false, error: getErrorMessage(e) }; }
+    } catch (e: any) { 
+        console.error("Anonymous login error:", e);
+        return { success: false, error: getErrorMessage(e) }; 
+    }
 };
 
 export const resetUserPassword = async (id: string) => {
