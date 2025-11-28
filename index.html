@@ -110,14 +110,17 @@
 
       /* Print Optimization */
       @media print {
-        @page { size: landscape; margin: 0; }
-        body { background: white; color: black; zoom: 0.7; padding: 10mm; }
+        @page { size: landscape; margin: 8mm; }
+        body { background: white !important; color: black !important; zoom: 0.65; padding: 0; margin: 0; }
         .no-print { display: none !important; }
         #syllabus-print-container { display: block !important; width: 100%; position: static; height: auto !important; overflow: visible !important; }
-        .print-grid { display: grid !important; grid-template-columns: 1fr 1fr; gap: 1rem; width: 100%; }
+        .print-grid { display: grid !important; grid-template-columns: 1fr 1fr; gap: 1rem; width: 100%; page-break-inside: avoid; }
         * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-        .glass-panel, .glass-card { border: 1px solid #ccc; box-shadow: none; background: white !important; }
+        .glass-panel, .glass-card { border: 1px solid #ccc !important; box-shadow: none !important; background: white !important; }
         .custom-scrollbar { overflow: visible !important; max-height: none !important; }
+        table { page-break-inside: auto; }
+        tr { page-break-inside: avoid; page-break-after: auto; }
+        thead { display: table-header-group; }
         
         /* Selective Printing Logic */
         .print-show-p1 .paper-section-2 { display: none !important; }
@@ -125,6 +128,10 @@
         
         .print-show-p2 .paper-section-1 { display: none !important; }
         .print-show-p2 .print-grid { grid-template-columns: 1fr !important; }
+        
+        /* Ensure tables fit properly */
+        table { width: 100% !important; font-size: 10px !important; }
+        th, td { padding: 4px !important; }
       }
     </style>
   <script type="importmap">

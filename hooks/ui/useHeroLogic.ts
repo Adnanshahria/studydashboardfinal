@@ -26,7 +26,8 @@ export const useHeroLogic = (
 
     const handleWeightChange = (key: string, val: string) => {
         if (val === '') {
-             setTempWeights(prev => ({ ...prev, [key]: 0 }));
+             // Allow empty string temporarily - it will be treated as 0 in calculations
+             setTempWeights(prev => ({ ...prev, [key]: '' as any }));
              return;
         }
         const parsed = parseFloat(val);

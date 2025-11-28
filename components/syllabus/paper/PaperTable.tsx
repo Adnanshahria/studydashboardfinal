@@ -25,7 +25,7 @@ export const PaperTable: React.FC<Props> = ({ paper, chapters, allItems, userDat
                     <th className="p-3 pl-6 w-32 md:w-36 sticky left-0 top-0 z-40 bg-slate-100 dark:bg-[#0f172a] border-r border-slate-200 dark:border-white/5 print:static">Chapter</th>
                     {allItems.map(t => (
                         <th key={t.key} className="p-3 text-center min-w-[60px] border-r border-slate-200/50 dark:border-white/5 print:min-w-0">
-                            <div className="flex flex-col items-center justify-center gap-1"><span className="font-bold">{t.name}</span>{editMode && <div className="flex gap-1 no-print"><button onClick={() => setRenameModal({ isOpen: true, key: t.key, currentName: t.name, type: 'column' })} className="text-slate-400 hover:text-blue-500">✏️</button><button onClick={() => onDeleteColumn(activeSubject, t.key)} className="text-slate-400 hover:text-rose-500">✕</button></div>}</div>
+                            <div className="flex flex-col items-center justify-center gap-1"><span className="font-bold">{t.name}</span>{editMode && <div className="flex gap-1 no-print"><button onClick={() => setRenameModal({ isOpen: true, key: t.key, currentName: t.name, type: 'column' })} className="text-slate-400 hover:text-blue-500 transition-colors">✏️</button><button onClick={() => onDeleteColumn(activeSubject, t.key)} className="text-slate-400 hover:text-rose-500 transition-colors">✕</button></div>}</div>
                         </th>
                     ))}
                     {editMode && <th className="p-2 text-center w-12 bg-blue-500/5 sticky right-0 z-30 no-print"><button onClick={() => setAddColumnModal(true)} className="w-8 h-8 rounded-full bg-blue-500/10 text-blue-500">+</button></th>}

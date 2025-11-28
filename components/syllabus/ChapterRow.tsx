@@ -17,9 +17,9 @@ export const ChapterRow: React.FC<Props> = ({ ch, activeSubject, allItems, userD
             <div className="flex items-center justify-between gap-2 h-full">
                 <span className="line-clamp-2 leading-tight font-semibold" title={ch.name}>{ch.name}</span>
                 {editMode && (
-                    <div className="flex items-center gap-1 min-w-fit no-print opacity-0 group-hover/ch:opacity-100">
-                        <button onClick={() => actions.setRenameModal({ isOpen: true, key: ch.id, currentName: ch.name, type: 'chapter' })} className="text-[10px] text-slate-400 hover:text-blue-500">✏️</button>
-                        <button onClick={() => actions.onDeleteChapter(activeSubject, ch.id)} className="text-[10px] text-slate-400 hover:text-rose-500">✕</button>
+                    <div className="flex items-center gap-1 min-w-fit no-print opacity-100 md:opacity-0 md:group-hover/ch:opacity-100 transition-opacity">
+                        <button onClick={() => actions.setRenameModal({ isOpen: true, key: ch.id, currentName: ch.name, type: 'chapter' })} className="text-[10px] text-slate-400 hover:text-blue-500 transition-colors">✏️</button>
+                        <button onClick={() => actions.onDeleteChapter(activeSubject, ch.id)} className="text-[10px] text-slate-400 hover:text-rose-500 transition-colors">✕</button>
                     </div>
                 )}
             </div>
