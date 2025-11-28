@@ -25,22 +25,21 @@ export const useHeroLogic = (
     }, [tempWeights, currentConfigItems]);
 
     const handleWeightChange = (key: string, val: string) => {
-        // Use parseFloat to allow decimals (e.g. 12.5)
-        // Allow empty string to let user backspace to clear input
         if (val === '') {
              setTempWeights(prev => ({ ...prev, [key]: 0 }));
              return;
         }
         const parsed = parseFloat(val);
-        const safeVal = isNaN(parsed) ? 0 : Math.min(100, Math.max(0, parsed));
+        const rounded = Math.round(parsed * 100) / 100;
+        const safeVal = isNaN(rounded) ? 0 : Math.min(100, Math.max(0, rounded));
         setTempWeights(prev => ({ ...prev, [key]: safeVal }));
     };
-    
-    const saveWeights = () => { 
-        if (weightTotal === 100) { 
-            onUpdateWeights(tempWeights, selectedSubject === 'global' ? undefined : selectedSubject); 
-            setIsEditingWeights(false); 
-        } 
+
+    const saveWeights = () => {
+        if (Math.abs(weightTotal - 100) < 0.01) {
+            onUpdateWeights(tempWeights, selectedSubject === 'global' ? undefined : selectedSubject);
+            setIsEditingWeights(false);
+        }
     };
 
     return {

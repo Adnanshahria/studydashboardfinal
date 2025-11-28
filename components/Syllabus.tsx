@@ -56,9 +56,16 @@ export const Syllabus: React.FC<SyllabusProps> = ({ activeSubject, userData, set
     const handlePrint = (mode: 'p1' | 'p2' | 'both') => {
         setPrintMode(mode);
         setShowPrintModal(false);
+
+        const resetMode = () => {
+            setPrintMode('both');
+            window.removeEventListener('afterprint', resetMode);
+        };
+
+        window.addEventListener('afterprint', resetMode);
+
         setTimeout(() => {
             window.print();
-            setPrintMode('both');
         }, 300);
     };
 

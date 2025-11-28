@@ -3,11 +3,12 @@ import { UserData, UserSettings } from '../../types';
 import { firestore, firebaseAuth } from './core';
 import { ensureUserDoc } from './helpers';
 import { DEFAULT_SETTINGS } from '../../constants';
+import { debounce } from '../debounce';
 
 const FIREBASE_USER_COLLECTION = 'users';
 
 export const initFirebase = async (
-    uid: string, 
+    uid: string,
     onData: (data: UserData | null, settings: UserSettings | null) => void,
     onStatus: (status: 'connected' | 'disconnected') => void,
     localSettingsToMigrate?: UserSettings,
@@ -16,32 +17,31 @@ export const initFirebase = async (
     try {
         if (!firestore) throw new Error("Firestore not initialized");
         if (!uid) throw new Error("No UID");
-        
+
         onStatus('connected');
-        
+
+        const debouncedOnData = debounce(onData, 100);
+
         const unsub = firestore.collection(FIREBASE_USER_COLLECTION).doc(uid).onSnapshot((docSnap) => {
             if (docSnap.exists) {
                 const val = docSnap.data();
-                onData(val?.data || {}, val?.settings || null);
+                debouncedOnData(val?.data || {}, val?.settings || null);
             } else {
-                // Doc doesn't exist? Create it now (Lazy Creation)
-                // We pass true for 'merge' implicitly via ensureUserDoc to avoid overwrites
                 ensureUserDoc(uid, localSettingsToMigrate || DEFAULT_SETTINGS, localDataToMigrate).then((created) => {
                    if (created) {
-                       // After creating, manually trigger onData with defaults
-                       onData(localDataToMigrate || {}, localSettingsToMigrate || DEFAULT_SETTINGS);
+                       debouncedOnData(localDataToMigrate || {}, localSettingsToMigrate || DEFAULT_SETTINGS);
                    }
                 });
             }
-        }, (error) => { 
-            console.error("Firestore listener error", error); 
-            onStatus('disconnected'); 
+        }, (error) => {
+            console.error("Firestore listener error", error);
+            onStatus('disconnected');
         });
-        
+
         return unsub;
-    } catch (e) { 
-        console.error("Init Firebase failed", e); 
-        onStatus('disconnected'); 
-        return () => {}; 
+    } catch (e) {
+        console.error("Init Firebase failed", e);
+        onStatus('disconnected');
+        return () => {};
     }
 };

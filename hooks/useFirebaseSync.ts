@@ -27,13 +27,13 @@ export const useFirebaseSync = () => {
     const waitForCustomId = async (user: firebase.User): Promise<string> => {
         if (user.displayName) return user.displayName;
 
-        // Poll for up to 2.5 seconds (5 attempts)
         console.log("⏳ Waiting for Custom ID...");
-        for (let i = 0; i < 5; i++) {
-            await new Promise(resolve => setTimeout(resolve, 500));
+        let backoffMs = 250;
+        for (let i = 0; i < 10; i++) {
+            await new Promise(resolve => setTimeout(resolve, backoffMs));
+            backoffMs = Math.min(backoffMs * 1.3, 800);
             try {
                 await user.reload();
-                // Need to get the refreshed object from auth
                 const refreshed = firebaseAuth.currentUser;
                 if (refreshed?.displayName) {
                     console.log("✅ Custom ID found:", refreshed.displayName);

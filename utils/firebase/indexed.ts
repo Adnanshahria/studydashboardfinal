@@ -83,9 +83,13 @@ export const dbClear = async (storeName: string) => {
 };
 
 export const cleanupStorage = () => {
-    if (db) {
-        db.close();
-        db = null;
-        connectionPromise = null;
+    try {
+        if (db) {
+            db.close();
+            db = null;
+            connectionPromise = null;
+        }
+    } catch (e) {
+        console.warn("Storage cleanup failed:", e);
     }
 };

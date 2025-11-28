@@ -16,10 +16,12 @@ export const useSyncActions = (
     const handleStatusUpdate = async (key: string) => {
         if(!userId) return;
         const current = userData[key] ?? 0;
-        const next = (current + 1) % 7;
-        const newData = { ...userData, [key]: next, [`timestamp_${key}`]: new Date().toISOString() };
+        const validated = Math.max(0, Math.min(6, Math.floor(current)));
+        const next = (validated + 1) % 7;
+        const safeNext = Math.max(0, Math.min(6, Math.floor(next)));
+        const newData = { ...userData, [key]: safeNext, [`timestamp_${key}`]: new Date().toISOString() };
         setUserData(newData);
-        await saveUserProgress(userId, { [key]: next, [`timestamp_${key}`]: new Date().toISOString() });
+        await saveUserProgress(userId, { [key]: safeNext, [`timestamp_${key}`]: new Date().toISOString() });
     };
 
     const handleNoteUpdate = async (key: string, text: string) => {

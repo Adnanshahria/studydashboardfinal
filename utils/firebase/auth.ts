@@ -60,15 +60,16 @@ export const loginAnonymously = async () => {
     if (!firebaseAuth) return { success: false, error: "Firebase Auth not initialized" };
     try {
         const result = await firebaseAuth.signInAnonymously();
-        
+
         if (result.user) {
-            // Generate Custom Guest ID
+            // Generate Custom Guest ID with enhanced uniqueness to prevent collisions
             const now = new Date();
             const fmt = (n: number) => n.toString().padStart(2, '0');
             const dateStr = `${now.getFullYear()}${fmt(now.getMonth()+1)}${fmt(now.getDate())}`;
             const timeStr = `${fmt(now.getHours())}${fmt(now.getMinutes())}${fmt(now.getSeconds())}`;
-            const rand = Math.floor(1000 + Math.random() * 9000);
-            const guestDisplayName = `guest_${dateStr}_${timeStr}_${rand}`;
+            const rand = Math.floor(Math.random() * 1000000);
+            const uidPrefix = result.user.uid.slice(0, 6);
+            const guestDisplayName = `guest_${dateStr}_${timeStr}_${rand}_${uidPrefix}`;
 
             // CRITICAL: Set Auth Profile to use Guest ID
             await result.user.updateProfile({ displayName: guestDisplayName });

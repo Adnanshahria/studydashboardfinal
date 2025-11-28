@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { UserData, UserSettings, CompositeData } from '../types';
 import { Modal } from './ui/Modal';
 import { Button } from './ui/Button';
@@ -106,7 +106,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeSubject, onChangeSubject
             {modals.perf && <PerformanceConfigModal currentConfig={settings.progressBars} allItems={settings.subjectConfigs?.[activeSubject] || settings.trackableItems} onSave={(c) => { onUpdateSettings({ ...settings, progressBars: c }); setModals({ ...modals, perf: false }); }} onClose={() => setModals({ ...modals, perf: false })} />}
             {modals.subConfig && <SubjectConfigModal currentItems={settings.subjectProgressItems || []} currentWeights={settings.subjectProgressWeights || {}} allItems={settings.subjectConfigs?.[activeSubject] || settings.trackableItems} onSave={(i, w) => { onUpdateSettings({ ...settings, subjectProgressItems: i, subjectProgressWeights: w }); setModals({ ...modals, subConfig: false }); }} onClose={() => setModals({ ...modals, subConfig: false })} />}
             {modals.rename && <Modal isOpen={true} onClose={() => setModals({ ...modals, rename: null })} title="Rename Subject"><div className="flex flex-col gap-4"><input type="text" value={modals.rename.name} onChange={(e) => setModals({ ...modals, rename: { ...modals.rename!, name: e.target.value } })} className="bg-white dark:bg-black/20 border border-slate-200 dark:border-white/10 rounded-xl p-3 text-sm dark:text-white" /><div className="flex justify-end gap-3"><Button variant="secondary" onClick={() => setModals({ ...modals, rename: null })}>Cancel</Button><Button onClick={handleRename}>Save Name</Button></div></div></Modal>}
-            {modals.addSub && <AddSubjectModal onClose={() => setModals({ ...modals, addSub: false })} onAdd={(name, emoji, color) => { const newSyllabus = { ...settings.syllabus, [`subj_${Date.now()}`]: { name, icon: emoji, color, chapters: [] } }; onUpdateSettings({ ...settings, syllabus: newSyllabus }); }} />}
+            {modals.addSub && <AddSubjectModal onClose={() => setModals({ ...modals, addSub: false })} onAdd={(name, emoji, color) => { const subKey = `subj_${Date.now()}`; const newSyllabus = { ...settings.syllabus, [subKey]: { name, icon: emoji, color, chapters: [] } }; const newOpenState = { ...settings.syllabusOpenState, [`${subKey}-p1`]: true, [`${subKey}-p2`]: true }; onUpdateSettings({ ...settings, syllabus: newSyllabus, syllabusOpenState: newOpenState }); }} />}
             
             <ConfirmModal 
                 isOpen={!!deleteConfirm} 

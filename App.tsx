@@ -1,8 +1,11 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { calculateGlobalComposite } from './utils/calculations';
 import { Sidebar } from './components/Sidebar';
 import { Syllabus } from './components/Syllabus';
+
+const MemoizedSidebar = React.memo(Sidebar);
+const MemoizedSyllabus = React.memo(Syllabus);
 import { AuthModal } from './components/auth/AuthModal';
 import { DeveloperModal } from './components/auth/DeveloperModal';
 import { AppGuideModal } from './components/guide/AppGuideModal';
@@ -54,7 +57,10 @@ function App() {
     return () => clearTimeout(timeout);
   }, [postLoginLoading]);
 
-  const compositeData = calculateGlobalComposite(userData, settings);
+  const compositeData = useMemo(
+    () => calculateGlobalComposite(userData, settings),
+    [userData, settings]
+  );
 
   if (isAuthResolving || postLoginLoading) {
       return <SkeletonDashboard />;
@@ -104,12 +110,12 @@ function App() {
                     ) : (
                         <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-[380px_1fr] gap-6 items-start lg:overflow-hidden print:block">
                             <div className="no-print lg:h-full lg:overflow-hidden flex flex-col pb-10 lg:pb-0">
-                                <Sidebar 
-                                    activeSubject={activeSubject} 
-                                    onChangeSubject={setActiveSubject} 
-                                    userData={userData} 
-                                    settings={settings} 
-                                    onUpdateSettings={handleSettingsUpdate} 
+                                <MemoizedSidebar
+                                    activeSubject={activeSubject}
+                                    onChangeSubject={setActiveSubject}
+                                    userData={userData}
+                                    settings={settings}
+                                    onUpdateSettings={handleSettingsUpdate}
                                     onDeleteSubject={dataMgr.handleDeleteSubject}
                                     compositeData={compositeData}
                                     onUpdateWeights={dataMgr.handleWeightUpdate}
@@ -117,7 +123,7 @@ function App() {
                                 />
                             </div>
                             <div id="syllabus-print-container" className="lg:h-full lg:overflow-y-auto custom-scrollbar pr-1 pb-20 lg:pb-0">
-                                <Syllabus activeSubject={activeSubject} userData={userData} settings={settings} onUpdateStatus={handleStatusUpdate} onUpdateNote={handleNoteUpdate} onTogglePaper={(key) => handleSettingsUpdate({ ...settings, syllabusOpenState: { ...settings.syllabusOpenState, [key]: !settings.syllabusOpenState[key] } })} onRenameColumn={dataMgr.onRenameColumn} onAddColumn={dataMgr.onAddColumn} onAddChapter={dataMgr.onAddChapter} onDeleteChapter={dataMgr.onDeleteChapter} onDeleteColumn={dataMgr.onDeleteColumn} onRenameChapter={dataMgr.handleRenameChapter} />
+                                <MemoizedSyllabus activeSubject={activeSubject} userData={userData} settings={settings} onUpdateStatus={handleStatusUpdate} onUpdateNote={handleNoteUpdate} onTogglePaper={(key) => handleSettingsUpdate({ ...settings, syllabusOpenState: { ...settings.syllabusOpenState, [key]: !settings.syllabusOpenState[key] } })} onRenameColumn={dataMgr.onRenameColumn} onAddColumn={dataMgr.onAddColumn} onAddChapter={dataMgr.onAddChapter} onDeleteChapter={dataMgr.onDeleteChapter} onDeleteColumn={dataMgr.onDeleteColumn} onRenameChapter={dataMgr.handleRenameChapter} />
                             </div>
                         </div>
                     )}

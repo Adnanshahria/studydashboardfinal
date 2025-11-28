@@ -26,12 +26,11 @@ export const useDataSync = (
         if (!userId) return;
 
         let unsub: () => void = () => {};
-        
+
         const syncProcess = async () => {
             if (isMounted.current) setIsLoading(true);
 
             try {
-                // Re-fetch local cache first for speed
                 const [cachedData, cachedSettings] = await Promise.all([
                     dbGet('main'),
                     dbGet('settings')
@@ -40,7 +39,6 @@ export const useDataSync = (
                 if (isMounted.current && (cachedData || cachedSettings)) {
                     if (cachedData) setUserData(prev => ({ ...prev, ...cachedData }));
                     if (cachedSettings) setSettings(prev => ({ ...prev, ...cachedSettings }));
-                    // Keep loading true until firebase confirms, or set false if confident
                 }
             } catch (e) {
                 console.warn("Local cache load failed", e);
@@ -49,7 +47,7 @@ export const useDataSync = (
             try {
                 const unsubscribe = await initFirebase(userId, (remoteData, remoteSettings) => {
                     if (!isMounted.current) return;
-                    
+
                     if (remoteData) {
                         setUserData(prev => ({ ...prev, ...remoteData }));
                         dbPut('userData', { id: 'main', value: remoteData }).catch(console.warn);
@@ -70,10 +68,10 @@ export const useDataSync = (
                 }, (status) => {
                     if (isMounted.current) setConnectionStatus(status);
                 });
-                
+
                 if (isMounted.current) unsub = unsubscribe;
                 else unsubscribe();
-                
+
             } catch (e) {
                 console.error("Sync init failed", e);
                 if (isMounted.current) setIsLoading(false);
@@ -81,11 +79,11 @@ export const useDataSync = (
         };
 
         syncProcess();
-        
+
         return () => {
             unsub();
         };
-    }, [userId, syncKey]); // Depend on syncKey
+    }, [userId, syncKey, setUserData, setSettings]); // Depend on syncKey
 
     return { isLoading, connectionStatus };
 };

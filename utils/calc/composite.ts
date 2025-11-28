@@ -5,7 +5,11 @@ export const calculateGlobalComposite = (userData: UserData, settings: UserSetti
     const globalWeights = settings.weights || {};
     const syllabus = settings.syllabus;
     const subjects = Object.keys(syllabus);
-    
+
+    if (subjects.length === 0) {
+        return { composite: 0, breakdown: {}, totalWeight: 0 };
+    }
+
     const getItems = (k: string) => settings.subjectConfigs?.[k] || settings.trackableItems;
     const getWeights = (k: string) => settings.subjectWeights?.[k] || globalWeights;
 
@@ -16,7 +20,7 @@ export const calculateGlobalComposite = (userData: UserData, settings: UserSetti
         totalSubjectProgress += p.overall;
     });
 
-    const composite = subjects.length > 0 ? totalSubjectProgress / subjects.length : 0;
+    const composite = totalSubjectProgress / subjects.length;
     const allGlobalKeys = new Set<string>();
     settings.trackableItems.forEach(i => allGlobalKeys.add(i.key));
     if (settings.subjectConfigs) Object.values(settings.subjectConfigs).forEach(its => its.forEach(i => allGlobalKeys.add(i.key)));

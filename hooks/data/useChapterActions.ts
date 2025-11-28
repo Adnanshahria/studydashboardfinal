@@ -7,9 +7,12 @@ export const useChapterActions = (settings: UserSettings, handleSettingsUpdate: 
     const onDeleteChapter = (subjectKey: string, chapterId: number | string) => {
         const currentSub = settings.syllabus[subjectKey];
         if (!currentSub) return;
-        
-        const newSyllabus = JSON.parse(JSON.stringify(settings.syllabus));
-        newSyllabus[subjectKey].chapters = newSyllabus[subjectKey].chapters.filter((c: Chapter) => c.id !== chapterId);
+
+        const newSyllabus = { ...settings.syllabus };
+        newSyllabus[subjectKey] = {
+            ...newSyllabus[subjectKey],
+            chapters: newSyllabus[subjectKey].chapters.filter((c: Chapter) => c.id !== chapterId)
+        };
         handleSettingsUpdate({ ...settings, syllabus: newSyllabus });
     };
 
@@ -17,11 +20,13 @@ export const useChapterActions = (settings: UserSettings, handleSettingsUpdate: 
         const currentSub = settings.syllabus[subjectKey];
         if (!currentSub) return;
 
-        const newSyllabus = JSON.parse(JSON.stringify(settings.syllabus));
-        const chapterIndex = newSyllabus[subjectKey].chapters.findIndex((c: Chapter) => c.id === chapterId);
-        
+        const chapterIndex = currentSub.chapters.findIndex((c: Chapter) => c.id === chapterId);
+
         if (chapterIndex !== -1) {
-            newSyllabus[subjectKey].chapters[chapterIndex].name = newName;
+            const newChapters = [...currentSub.chapters];
+            newChapters[chapterIndex] = { ...newChapters[chapterIndex], name: newName };
+            const newSyllabus = { ...settings.syllabus };
+            newSyllabus[subjectKey] = { ...currentSub, chapters: newChapters };
             handleSettingsUpdate({ ...settings, syllabus: newSyllabus });
         }
     };
@@ -29,10 +34,12 @@ export const useChapterActions = (settings: UserSettings, handleSettingsUpdate: 
     const onAddChapter = (subjectKey: string, paper: 1 | 2, name: string) => {
         const currentSub = settings.syllabus[subjectKey];
         if (!currentSub) return;
-        // Fix: Add random suffix to prevent ID collision
-        const newChapter: Chapter = { id: `custom_${Date.now()}_${Math.floor(Math.random()*1000)}`, name, paper };
-        const newSyllabus = JSON.parse(JSON.stringify(settings.syllabus));
-        newSyllabus[subjectKey].chapters.push(newChapter);
+        const newChapter: Chapter = { id: `custom_${Date.now()}_${performance.now()}_${Math.random()}`, name, paper };
+        const newSyllabus = { ...settings.syllabus };
+        newSyllabus[subjectKey] = {
+            ...currentSub,
+            chapters: [...currentSub.chapters, newChapter]
+        };
         handleSettingsUpdate({ ...settings, syllabus: newSyllabus });
     };
 
