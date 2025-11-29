@@ -13,7 +13,7 @@ interface Props {
 
 export const ChapterRow: React.FC<Props> = ({ ch, activeSubject, allItems, userData, editMode, actions }) => (
     <tr className="border-b border-slate-200 dark:border-white/5 hover:bg-slate-50 dark:hover:bg-white/5 transition-colors group/tr">
-        <td className="p-3 pl-6 font-medium sticky left-0 z-20 bg-slate-50 dark:bg-[#020617] text-xs md:text-sm border-r border-slate-200 dark:border-white/5 text-slate-700 dark:text-slate-300 group/ch h-12 leading-tight print:static">
+        <td className="p-2 pl-4 font-medium sticky left-0 z-20 bg-slate-50 dark:bg-[#020617] text-xs md:text-sm border-r border-slate-200 dark:border-white/5 text-slate-700 dark:text-slate-300 group/ch h-10 leading-tight print:static">
             <div className="flex items-center justify-between gap-2 h-full">
                 <span className="line-clamp-2 leading-tight font-semibold" title={ch.name}>{ch.name}</span>
                 {editMode && (
@@ -25,18 +25,16 @@ export const ChapterRow: React.FC<Props> = ({ ch, activeSubject, allItems, userD
             </div>
         </td>
         {allItems.map((item) => {
-            // FIX: Use item.key directly for data storage/retrieval.
-            // This ensures that if columns are reordered or deleted, the data stays with the correct column type.
             const key = `s_${activeSubject}_${ch.id}_${item.key}`;
             const val = userData[key] ?? 0;
             const hasNote = !!userData[`note_${key}`];
             return (
-                <td key={item.key} className="p-1 text-center relative group/cell border-r border-slate-200/30 dark:border-white/5 print:border-slate-200">
+                <td key={item.key} className="p-1 text-center relative border-r border-slate-200/30 dark:border-white/5 print:border-slate-200">
                     <div className="flex justify-center"><StatusButton val={val} onClick={() => actions.onUpdateStatus(key)} /></div>
-                    <button onClick={() => actions.setNoteModal({ isOpen: true, key, text: userData[`note_${key}`] || '' })} className={`absolute top-1 right-1 w-4 h-4 rounded-full flex items-center justify-center text-[8px] transition-transform hover:scale-110 no-print ${hasNote ? 'bg-amber-400 text-white shadow-sm z-10' : 'text-slate-400 opacity-60 hover:opacity-100'}`}>{hasNote ? '📝' : '+'}</button>
+                    <button onClick={() => actions.setNoteModal({ isOpen: true, key, text: userData[`note_${key}`] || '' })} className={`absolute top-0.5 right-0.5 w-5 h-5 rounded-full flex items-center justify-center text-[9px] transition-transform hover:scale-110 no-print border ${hasNote ? 'bg-amber-400 text-white shadow-sm z-10 border-amber-500' : 'bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-400 border-slate-300 dark:border-slate-500'}`}>{hasNote ? '📝' : '+'}</button>
                 </td>
             );
         })}
-        {editMode && <td className="p-2 bg-slate-50/30 dark:bg-white/5 no-print"></td>}
+        {editMode && <td className="p-1 bg-slate-50/30 dark:bg-white/5 no-print"></td>}
     </tr>
 );

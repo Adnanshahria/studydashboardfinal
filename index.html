@@ -114,15 +114,17 @@
         box-shadow: 0 0 20px rgba(var(--glow-rgb), var(--shadow-opacity));
       }
 
-      .paper-header-glow {
-        text-shadow: 0 0 10px rgba(255, 255, 255, 0.8), 0 0 20px rgba(255, 255, 255, 0.4);
+      .table-header-glow {
+        box-shadow: 0 2px 8px rgba(var(--glow-rgb), 0.15), inset 0 -1px 0 rgba(255, 255, 255, 0.1);
       }
-      html[data-theme="light"] .paper-header-glow {
-        text-shadow: 0 0 8px rgba(0, 0, 0, 0.3), 0 0 15px rgba(0, 0, 0, 0.2);
+      .table-header-glow th {
+        text-shadow: 0 0 6px rgba(255, 255, 255, 0.3);
       }
-      .paper-header-border-glow {
-        border-color: rgba(var(--glow-rgb), 0.6) !important;
-        box-shadow: 0 0 12px rgba(var(--glow-rgb), 0.3), inset 0 0 8px rgba(var(--glow-rgb), 0.1);
+      html[data-theme="light"] .table-header-glow {
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08), inset 0 -1px 0 rgba(0, 0, 0, 0.05);
+      }
+      html[data-theme="light"] .table-header-glow th {
+        text-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
       }
 
       body.no-glow .glass-panel, body.no-glow .glass-card {
@@ -142,28 +144,40 @@
 
       /* Print Optimization */
       @media print {
-        @page { size: landscape; margin: 8mm; }
-        body { background: white !important; color: black !important; zoom: 0.65; padding: 0; margin: 0; }
+        @page { size: landscape; margin: 6mm; }
+        body { background: white !important; color: black !important; zoom: 0.6; padding: 0; margin: 0; }
         .no-print { display: none !important; }
         #syllabus-print-container { display: block !important; width: 100%; position: static; height: auto !important; overflow: visible !important; }
-        .print-grid { display: grid !important; grid-template-columns: 1fr 1fr; gap: 1rem; width: 100%; page-break-inside: avoid; }
         * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
         .glass-panel, .glass-card { border: 1px solid #ccc !important; box-shadow: none !important; background: white !important; }
         .custom-scrollbar { overflow: visible !important; max-height: none !important; }
-        table { page-break-inside: auto; }
+        table { page-break-inside: auto; width: 100% !important; font-size: 9px !important; }
         tr { page-break-inside: avoid; page-break-after: auto; }
         thead { display: table-header-group; }
+        th, td { padding: 3px !important; }
         
-        /* Selective Printing Logic */
+        /* Table header bold in print */
+        thead tr { font-weight: bold !important; background: #f3f4f6 !important; }
+        thead th { font-weight: 700 !important; }
+        
+        /* Both Papers: Side-by-side grid layout */
+        .print-grid { 
+          display: grid !important; 
+          grid-template-columns: 1fr 1fr; 
+          gap: 0.75rem; 
+          width: 100%; 
+          page-break-inside: avoid; 
+        }
+        
+        /* Single Paper Selection: Hide inactive paper, full width */
         .print-show-p1 .paper-section-2 { display: none !important; }
         .print-show-p1 .print-grid { grid-template-columns: 1fr !important; }
         
         .print-show-p2 .paper-section-1 { display: none !important; }
         .print-show-p2 .print-grid { grid-template-columns: 1fr !important; }
         
-        /* Ensure tables fit properly */
-        table { width: 100% !important; font-size: 10px !important; }
-        th, td { padding: 4px !important; }
+        /* Subject header styling for print */
+        .print-grid > div { break-inside: avoid; }
       }
     </style>
   <script type="importmap">
