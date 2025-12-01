@@ -6,6 +6,14 @@ TrackStudy is a comprehensive study tracking dashboard built with React, Vite, a
 **Current State**: Fully functional study tracking application with Firebase authentication and real-time data synchronization.
 
 ## Recent Changes
+- **2025-12-01**: Security and Logic Audit Complete
+  - SECURITY FIX: Removed plaintext password storage in Firebase auth
+  - Fixed status cycle logic (now correctly 0-5 range instead of 0-6)
+  - Added comprehensive input validation to all data action hooks
+  - Fixed race conditions in Firebase sync hooks with proper cleanup
+  - Enhanced debounce utility with cancel/flush methods
+  - Added null/undefined/NaN guards in calculation utilities
+  - Improved error messages in authentication handlers
 - **2025-11-29**: Note Icons and Print View Refinements
   - Refined note icons: smaller (14px), positioned top-right (2px offset), semi-transparent (opacity 0.4 default, 1 on hover)
   - Note icons now have transparent background with thin soft border for minimal distraction
