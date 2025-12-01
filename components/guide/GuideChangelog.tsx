@@ -13,6 +13,7 @@ export const GuideChangelog = () => (
                     <span className="text-[10px] text-purple-500 border border-purple-200 dark:border-purple-900 px-1.5 rounded bg-purple-50 dark:bg-purple-900/20">Latest</span>
                 </div>
                 <ul className="space-y-1 text-xs text-slate-600 dark:text-slate-400 list-disc pl-4">
+                    <li><strong>📱 Responsive:</strong> Consolidated to true Mobile & Desktop only - removed tablet view, desktop now at 1280px+.</li>
                     <li><strong>🚀 Deployment:</strong> Now deployable on ANY platform - GitHub Pages, Vercel, Netlify, AWS, custom domains.</li>
                     <li><strong>🔐 Security:</strong> Fixed password change to update both Firebase Auth and Firestore. Password recovery fully functional.</li>
                     <li><strong>🔑 Auth:</strong> Password change now requires old password verification with reauthentication.</li>
