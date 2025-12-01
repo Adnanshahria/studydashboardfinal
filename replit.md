@@ -6,6 +6,13 @@ TrackStudy is a comprehensive study tracking dashboard built with React, Vite, a
 **Current State**: Fully functional study tracking application with Firebase authentication and real-time data synchronization.
 
 ## Recent Changes
+- **2025-12-01**: Responsive Design Consolidated - Mobile & Desktop Only
+  - ✅ Removed tablet breakpoint view (lg:)
+  - ✅ Implemented true desktop-only view using xl: breakpoint (1280px)
+  - ✅ Mobile mode shows stacked layout (sidebar below syllabus)
+  - ✅ Desktop mode shows side-by-side layout (sidebar left, syllabus right)
+  - ✅ Fixed desktop mode no longer looks like tablet
+  - ✅ Breakpoints consolidated: xl: for desktop, default for mobile
 - **2025-12-01**: Universal Deployment Ready - Multi-Platform Support
   - ✅ App is now deployable to ANY domain (GitHub Pages, Vercel, Netlify, AWS, etc)
   - ✅ GitHub Actions workflow configured for automatic GitHub Pages deployment
@@ -75,6 +82,7 @@ TrackStudy is a comprehensive study tracking dashboard built with React, Vite, a
 - **Authentication**: Firebase Auth
 - **Database**: Firebase Realtime Database
 - **Deployment Target**: Static site (Vite build)
+- **Responsive Design**: Mobile-First (mobile stacked view, desktop side-by-side at 1280px+)
 
 ### Project Structure
 ```

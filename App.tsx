@@ -101,7 +101,7 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen lg:h-screen w-screen lg:overflow-hidden flex flex-col text-slate-800 dark:text-slate-200 selection:bg-blue-500/30 selection:text-blue-600 dark:selection:text-blue-200 transition-colors duration-300 bg-slate-50 dark:bg-[#1A1A1C]">
+    <div className="min-h-screen xl:h-screen w-screen xl:overflow-hidden flex flex-col text-slate-800 dark:text-slate-200 selection:bg-blue-500/30 selection:text-blue-600 dark:selection:text-blue-200 transition-colors duration-300 bg-slate-50 dark:bg-[#1A1A1C]">
         {!userId && (
             <LandingHeader 
                 onDev={() => setShowDevModal(true)} 
@@ -111,7 +111,7 @@ function App() {
                 onToggleTheme={toggleTheme} 
             />
         )}
-        <main className="flex-1 w-full max-w-screen-2xl mx-auto p-4 lg:py-6 lg:overflow-hidden flex flex-col">
+        <main className="flex-1 w-full max-w-7xl mx-auto p-4 xl:py-6 xl:overflow-hidden flex flex-col">
             {userId ? (
                 <>
                     <DashboardHeader 
@@ -127,8 +127,8 @@ function App() {
                         onForceSync={forceSync}
                     />
                     {isLoading ? (
-                         <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-[380px_1fr] gap-6 items-start lg:overflow-hidden animate-pulse">
-                            <div className="hidden lg:flex flex-col gap-4 h-full">
+                         <div className="flex-1 min-h-0 grid grid-cols-1 xl:grid-cols-[380px_1fr] gap-6 items-start xl:overflow-hidden animate-pulse">
+                            <div className="hidden xl:flex flex-col gap-4 h-full">
                                 <div className="grid grid-cols-2 gap-3 shrink-0">
                                     <div className="h-32 bg-slate-200 dark:bg-white/5 rounded-2xl border border-slate-300 dark:border-white/5"></div>
                                     <div className="h-32 bg-slate-200 dark:bg-white/5 rounded-2xl border border-slate-300 dark:border-white/5"></div>
@@ -136,14 +136,14 @@ function App() {
                                 <div className="h-40 bg-slate-200 dark:bg-white/5 rounded-3xl shrink-0 border border-slate-300 dark:border-white/5"></div>
                                 <div className="flex-1 bg-slate-200 dark:bg-white/5 rounded-3xl border border-slate-300 dark:border-white/5"></div>
                             </div>
-                            <div className="h-full flex flex-col gap-6 lg:overflow-y-auto pr-1 pb-20 lg:pb-0">
+                            <div className="h-full flex flex-col gap-6 xl:overflow-y-auto pr-1 pb-20 xl:pb-0">
                                 <div className="h-20 bg-slate-200 dark:bg-white/5 rounded-2xl shrink-0 border border-slate-300 dark:border-white/5"></div>
                                 <div className="h-96 bg-slate-200 dark:bg-white/5 rounded-3xl shrink-0 border border-slate-300 dark:border-white/5"></div>
                             </div>
                          </div>
                     ) : (
-                        <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-[380px_1fr] gap-6 items-start lg:overflow-hidden print:block">
-                            <div className="no-print lg:h-full lg:overflow-hidden flex flex-col pb-10 lg:pb-0">
+                        <div className="flex-1 min-h-0 grid grid-cols-1 xl:grid-cols-[380px_1fr] gap-6 items-start xl:overflow-hidden print:block">
+                            <div className="no-print xl:h-full xl:overflow-hidden flex flex-col pb-10 xl:pb-0">
                                 <MemoizedSidebar
                                     activeSubject={activeSubject}
                                     onChangeSubject={setActiveSubject}
@@ -156,7 +156,7 @@ function App() {
                                     onUpdateCountdown={(t, l) => wrappedSettingsUpdate({ ...settings, countdownTarget: t, countdownLabel: l })}
                                 />
                             </div>
-                            <div id="syllabus-print-container" className="lg:h-full lg:overflow-y-auto custom-scrollbar pr-1 pb-20 lg:pb-0">
+                            <div id="syllabus-print-container" className="xl:h-full xl:overflow-y-auto custom-scrollbar pr-1 pb-20 xl:pb-0">
                                 <MemoizedSyllabus activeSubject={activeSubject} userData={userData} settings={settings} onUpdateStatus={wrappedStatusUpdate} onUpdateNote={wrappedNoteUpdate} onTogglePaper={(key) => wrappedSettingsUpdate({ ...settings, syllabusOpenState: { ...settings.syllabusOpenState, [key]: !settings.syllabusOpenState[key] } })} onRenameColumn={dataMgr.onRenameColumn} onAddColumn={dataMgr.onAddColumn} onAddChapter={dataMgr.onAddChapter} onDeleteChapter={dataMgr.onDeleteChapter} onDeleteColumn={dataMgr.onDeleteColumn} onRenameChapter={dataMgr.handleRenameChapter} />
                             </div>
                         </div>

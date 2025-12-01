@@ -5,10 +5,10 @@ import { UserData } from '../../types';
 
 export const DashboardHeader: React.FC<{ onDev: () => void, status: string, userId: string, userData: UserData, onLogout: () => void, onToggleTheme: () => void, theme: any, onGuide: () => void, onAppearance: () => void, onForceSync: () => void }> = ({ onDev, status, userId, userData, onLogout, onToggleTheme, theme, onGuide, onAppearance, onForceSync }) => (
     <div className="flex flex-row justify-between items-center mb-6 no-print gap-4">
-        <div onClick={onDev} className="glass-panel py-2 px-3 md:px-4 rounded-2xl flex items-center gap-3 transition-all hover:bg-white/50 dark:hover:bg-white/5 cursor-pointer select-none shadow-lg shadow-blue-500/5 dark:shadow-black/20 border border-slate-200 dark:border-white/10 max-w-[70%] group">
-            <div className="w-9 h-9 md:w-10 md:h-10 shrink-0 rounded-xl bg-black dark:bg-white flex items-center justify-center text-white dark:text-slate-900 font-black shadow-lg group-hover:scale-105 transition-transform text-sm md:text-base ring-1 ring-white/20">TS</div>
+        <div onClick={onDev} className="glass-panel py-2 px-3 xl:px-4 rounded-2xl flex items-center gap-3 transition-all hover:bg-white/50 dark:hover:bg-white/5 cursor-pointer select-none shadow-lg shadow-blue-500/5 dark:shadow-black/20 border border-slate-200 dark:border-white/10 max-w-[70%] group">
+            <div className="w-9 h-9 xl:w-10 xl:h-10 shrink-0 rounded-xl bg-black dark:bg-white flex items-center justify-center text-white dark:text-slate-900 font-black shadow-lg group-hover:scale-105 transition-transform text-sm xl:text-base ring-1 ring-white/20">TS</div>
             <div className="flex items-center gap-2 min-w-0 overflow-hidden">
-                <h1 className="text-lg md:text-xl font-bold tracking-tight text-slate-800 dark:text-white leading-tight truncate drop-shadow-sm">
+                <h1 className="text-lg xl:text-xl font-bold tracking-tight text-slate-800 dark:text-white leading-tight truncate drop-shadow-sm">
                     TrackStudy
                 </h1>
                 <div 
