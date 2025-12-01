@@ -50,9 +50,10 @@ export const AuthModal: React.FC<AuthModalProps> = (props) => {
                 
                 {/* Helpful Hint for Database Deletion Scenario */}
                 {props.modalError && (props.modalError.toLowerCase().includes('not found') || props.modalError.toLowerCase().includes('no user')) && (
-                    <p className="text-[10px] text-center text-slate-500 animate-fade-in">
-                        Database deleted? <button onClick={() => { props.setModalMode('create'); props.resetModalState(); }} className="text-blue-500 font-bold hover:underline">Create Account</button> again to restore.
-                    </p>
+                    <div className="text-[10px] text-center text-slate-600 dark:text-slate-400 bg-blue-50 dark:bg-blue-900/20 p-3 rounded-lg border border-blue-200 dark:border-blue-700/50 animate-fade-in">
+                        <p className="mb-2">This User ID doesn't exist yet.</p>
+                        <button onClick={() => { props.setModalMode('create'); props.resetModalState(); }} className="text-blue-600 dark:text-blue-400 font-bold hover:underline">Create Account</button> first to get started!
+                    </div>
                 )}
 
                 {/* Helpful Hint for Domain Authorization Scenario */}

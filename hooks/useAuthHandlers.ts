@@ -63,9 +63,19 @@ export const useAuthHandlers = (setUserId: (id: string) => void, onSuccess?: () 
             return;
         }
         
-        if (modalMode === 'change' && trimmedPass !== confirmPassword) {
-            setModalError('Passwords do not match.');
-            return;
+        if (modalMode === 'change') {
+            if (trimmedPass !== confirmPassword) {
+                setModalError('Passwords do not match.');
+                return;
+            }
+            if (trimmedPass.length < MIN_PASSWORD_LENGTH) {
+                setModalError(`Password must be at least ${MIN_PASSWORD_LENGTH} characters.`);
+                return;
+            }
+            if (trimmedPass.length > MAX_INPUT_LENGTH) {
+                setModalError('Password is too long.');
+                return;
+            }
         }
         
         setIsCheckingUser(true);
