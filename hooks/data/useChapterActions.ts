@@ -3,10 +3,11 @@ import { UserSettings, Chapter } from '../../types';
 
 export const useChapterActions = (settings: UserSettings, handleSettingsUpdate: (s: UserSettings) => void) => {
     
-    // Removed window.confirm logic. Confirmation is now handled by the UI (Modal).
     const onDeleteChapter = (subjectKey: string, chapterId: number | string) => {
+        if (!subjectKey || chapterId === undefined || chapterId === null) return;
+        
         const currentSub = settings.syllabus[subjectKey];
-        if (!currentSub) return;
+        if (!currentSub || !Array.isArray(currentSub.chapters)) return;
 
         const newSyllabus = { ...settings.syllabus };
         newSyllabus[subjectKey] = {
@@ -17,6 +18,10 @@ export const useChapterActions = (settings: UserSettings, handleSettingsUpdate: 
     };
 
     const handleRenameChapter = (subjectKey: string, chapterId: number | string, newName: string) => {
+        if (!subjectKey || chapterId === undefined || chapterId === null) return;
+        const trimmedName = typeof newName === 'string' ? newName.trim() : '';
+        if (!trimmedName || trimmedName.length > 200) return;
+        
         const currentSub = settings.syllabus[subjectKey];
         if (!currentSub) return;
 
@@ -24,7 +29,7 @@ export const useChapterActions = (settings: UserSettings, handleSettingsUpdate: 
 
         if (chapterIndex !== -1) {
             const newChapters = [...currentSub.chapters];
-            newChapters[chapterIndex] = { ...newChapters[chapterIndex], name: newName };
+            newChapters[chapterIndex] = { ...newChapters[chapterIndex], name: trimmedName };
             const newSyllabus = { ...settings.syllabus };
             newSyllabus[subjectKey] = { ...currentSub, chapters: newChapters };
             handleSettingsUpdate({ ...settings, syllabus: newSyllabus });
@@ -32,9 +37,15 @@ export const useChapterActions = (settings: UserSettings, handleSettingsUpdate: 
     };
 
     const onAddChapter = (subjectKey: string, paper: 1 | 2, name: string) => {
+        if (!subjectKey || (paper !== 1 && paper !== 2)) return;
+        const trimmedName = typeof name === 'string' ? name.trim() : '';
+        if (!trimmedName || trimmedName.length > 200) return;
+        
         const currentSub = settings.syllabus[subjectKey];
         if (!currentSub) return;
-        const newChapter: Chapter = { id: `custom_${Date.now()}_${performance.now()}_${Math.random()}`, name, paper };
+        
+        const uniqueId = `custom_${Date.now()}_${Math.random().toString(36).slice(2, 11)}`;
+        const newChapter: Chapter = { id: uniqueId, name: trimmedName, paper };
         const newSyllabus = { ...settings.syllabus };
         newSyllabus[subjectKey] = {
             ...currentSub,

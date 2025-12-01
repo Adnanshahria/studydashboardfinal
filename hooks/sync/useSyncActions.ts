@@ -14,27 +14,42 @@ export const useSyncActions = (
     setUserId: React.Dispatch<React.SetStateAction<string | null>>
 ) => {
     const handleStatusUpdate = async (key: string) => {
-        if(!userId) return;
-        const current = userData[key] ?? 0;
-        const validated = Math.max(0, Math.min(6, Math.floor(current)));
-        const next = (validated + 1) % 7;
-        const safeNext = Math.max(0, Math.min(6, Math.floor(next)));
-        const newData = { ...userData, [key]: safeNext, [`timestamp_${key}`]: new Date().toISOString() };
-        setUserData(newData);
-        await saveUserProgress(userId, { [key]: safeNext, [`timestamp_${key}`]: new Date().toISOString() });
+        if (!userId || !key || typeof key !== 'string') return;
+        try {
+            const current = userData[key];
+            const currentNum = typeof current === 'number' && Number.isFinite(current) ? current : 0;
+            const validated = Math.max(0, Math.min(5, Math.floor(currentNum)));
+            const next = (validated + 1) % 6;
+            const timestamp = new Date().toISOString();
+            const newData = { ...userData, [key]: next, [`timestamp_${key}`]: timestamp };
+            setUserData(newData);
+            await saveUserProgress(userId, { [key]: next, [`timestamp_${key}`]: timestamp });
+        } catch (error) {
+            console.error('Status update failed:', error);
+        }
     };
 
     const handleNoteUpdate = async (key: string, text: string) => {
-        if(!userId) return;
-        const newData = { ...userData, [`note_${key}`]: text };
-        setUserData(newData);
-        await saveUserProgress(userId, { [`note_${key}`]: text });
+        if (!userId || !key || typeof key !== 'string') return;
+        try {
+            const safeText = typeof text === 'string' ? text.slice(0, 10000) : '';
+            const newData = { ...userData, [`note_${key}`]: safeText };
+            setUserData(newData);
+            await saveUserProgress(userId, { [`note_${key}`]: safeText });
+        } catch (error) {
+            console.error('Note update failed:', error);
+        }
     };
 
     const handleSettingsUpdate = async (newSettings: UserSettings) => {
-        setSettings(newSettings);
-        if(!userId) return;
-        await saveSettings(userId, newSettings);
+        if (!newSettings || typeof newSettings !== 'object') return;
+        try {
+            setSettings(newSettings);
+            if (!userId) return;
+            await saveSettings(userId, newSettings);
+        } catch (error) {
+            console.error('Settings update failed:', error);
+        }
     };
 
     const toggleTheme = () => {

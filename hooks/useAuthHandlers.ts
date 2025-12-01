@@ -1,6 +1,9 @@
 
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { authService } from '../services/authService';
+
+const MAX_INPUT_LENGTH = 100;
+const MIN_PASSWORD_LENGTH = 6;
 
 export const useAuthHandlers = (setUserId: (id: string) => void, onSuccess?: () => void) => {
     const [showLoginModal, setShowLoginModal] = useState(false);
@@ -13,56 +16,107 @@ export const useAuthHandlers = (setUserId: (id: string) => void, onSuccess?: () 
     const [modalSuccess, setModalSuccess] = useState('');
     const [isCheckingUser, setIsCheckingUser] = useState(false);
 
-    const resetModalState = () => { setTempUserId(''); setTempPassword(''); setConfirmPassword(''); setShowPassword(false); setModalError(''); setModalSuccess(''); };
+    const resetModalState = useCallback(() => { 
+        setTempUserId(''); 
+        setTempPassword(''); 
+        setConfirmPassword(''); 
+        setShowPassword(false); 
+        setModalError(''); 
+        setModalSuccess(''); 
+    }, []);
 
     const handleUserAction = async () => {
-        if (!tempUserId.trim()) return;
-        setModalError(''); setModalSuccess('');
-        if (modalMode === 'create') {
-            if (tempPassword !== confirmPassword) { setModalError("Passwords do not match."); return; }
-            if (tempPassword.length < 6) { setModalError("Password must be at least 6 characters."); return; }
+        const trimmedId = tempUserId.trim();
+        const trimmedPass = tempPassword;
+        
+        if (!trimmedId) {
+            setModalError('Please enter a User ID.');
+            return;
         }
+        if (trimmedId.length > MAX_INPUT_LENGTH) {
+            setModalError('User ID is too long.');
+            return;
+        }
+        
+        setModalError(''); 
+        setModalSuccess('');
+        
+        if (modalMode === 'create') {
+            if (trimmedPass !== confirmPassword) { 
+                setModalError("Passwords do not match."); 
+                return; 
+            }
+            if (trimmedPass.length < MIN_PASSWORD_LENGTH) { 
+                setModalError(`Password must be at least ${MIN_PASSWORD_LENGTH} characters.`); 
+                return; 
+            }
+            if (trimmedPass.length > MAX_INPUT_LENGTH) {
+                setModalError('Password is too long.');
+                return;
+            }
+        }
+        
+        if (modalMode === 'login' && !trimmedPass) {
+            setModalError('Please enter a password.');
+            return;
+        }
+        
         setIsCheckingUser(true);
-        const inputId = tempUserId.trim();
-        const inputPass = tempPassword.trim();
+        
         try {
             if (modalMode === 'reset') {
-                const result = await authService.resetPassword(inputId);
-                if (result.success) { setModalSuccess('Reset link sent.'); setTimeout(() => setModalMode('login'), 4000); } 
-                else { setModalError(result.error || 'Reset failed.'); }
+                const result = await authService.resetPassword(trimmedId);
+                if (result.success) { 
+                    setModalSuccess('Reset link sent.'); 
+                    setTimeout(() => setModalMode('login'), 4000); 
+                } else { 
+                    setModalError(result.error || 'Reset failed.'); 
+                }
             } else if (modalMode === 'login') {
-                const result = await authService.login(inputId, inputPass);
-                // FIX: Do not manually setUserId here. Let the onAuthStateChanged listener in useFirebaseSync handle it.
-                // This prevents race conditions where we might have the wrong ID vs Auth Token.
+                const result = await authService.login(trimmedId, trimmedPass);
                 if (result.success && result.uid) { 
-                    onSuccess?.(); // Trigger immediate transition
+                    onSuccess?.();
                     setShowLoginModal(false); 
                     resetModalState(); 
-                } 
-                else { setModalError(result.error || 'Login failed.'); }
+                } else { 
+                    setModalError(result.error || 'Login failed.'); 
+                }
             } else {
-                const result = await authService.signup(inputId, inputPass);
+                const result = await authService.signup(trimmedId, trimmedPass);
                 if (result.success && result.uid) { 
-                    onSuccess?.(); // Trigger immediate transition
+                    onSuccess?.();
                     setShowLoginModal(false); 
                     resetModalState(); 
-                } 
-                else { setModalError(result.error || 'Creation failed.'); }
+                } else { 
+                    setModalError(result.error || 'Account creation failed.'); 
+                }
             }
-        } catch (e) { setModalError('Network error.'); } finally { setIsCheckingUser(false); }
+        } catch (e: unknown) { 
+            const errorMessage = e instanceof Error ? e.message : 'Network error. Please try again.';
+            setModalError(errorMessage); 
+        } finally { 
+            setIsCheckingUser(false); 
+        }
     };
 
     const handleGuestLogin = async () => {
-        setModalError(''); setIsCheckingUser(true);
+        setModalError(''); 
+        setIsCheckingUser(true);
         try {
             const result = await authService.guestLogin();
             if (result.success && result.uid) { 
-                onSuccess?.(); // Trigger immediate transition
+                onSuccess?.();
                 setShowLoginModal(false); 
-                // Listener will pick up state
-            } 
-            else { setModalError(result.error || 'Guest login failed'); }
-        } catch (e) { setModalError('Network error'); } finally { setIsCheckingUser(false); }
+                resetModalState();
+            } else { 
+                setModalError(result.error || 'Guest login failed. Please try again.'); 
+            }
+        } catch (e: unknown) { 
+            const errorMessage = e instanceof Error ? e.message : 'Network error. Please try again.';
+            setModalError(errorMessage); 
+        } finally { 
+            setIsCheckingUser(false); 
+        }
     };
 
     return { showLoginModal, setShowLoginModal, modalMode, setModalMode, tempUserId, setTempUserId, tempPassword, setTempPassword, confirmPassword, setConfirmPassword, showPassword, setShowPassword, modalError, modalSuccess, isCheckingUser, handleUserAction, handleGuestLogin, resetModalState };

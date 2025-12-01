@@ -43,11 +43,10 @@ export const createUser = async (rawId: string, pass: string) => {
             // CRITICAL: Set the Auth Profile Display Name to the Custom ID.
             await result.user.updateProfile({ displayName: id });
 
-            // Create Firestore Doc using the Custom ID (id), NOT the random UID.
             await firestore.collection(FIREBASE_USER_COLLECTION).doc(id).set({
                 createdAt: new Date().toISOString(),
                 settings: DEFAULT_SETTINGS,
-                data: { username: id, password: pass }
+                data: { username: id }
             }, { merge: true });
             
             return { success: true, uid: id };

@@ -12,24 +12,33 @@ export const useColumnActions = (settings: UserSettings, handleSettingsUpdate: (
         handleSettingsUpdate({ ...settings, subjectConfigs: newConfigs });
     };
 
-    // Removed window.confirm logic. Confirmation is now handled by the UI (Modal).
     const onDeleteColumn = (subjectKey: string, itemKey: string) => {
+        if (!subjectKey || !itemKey || typeof itemKey !== 'string') return;
         const currentItems = getItems(subjectKey).filter((t: TrackableItem) => t.key !== itemKey);
         updateConfig(subjectKey, currentItems);
     };
 
     const onRenameColumn = (subjectKey: string, itemKey: string, newName: string) => {
+        if (!subjectKey || !itemKey) return;
+        const trimmedName = typeof newName === 'string' ? newName.trim() : '';
+        if (!trimmedName || trimmedName.length > 100) return;
+        
         const currentItems = getItems(subjectKey);
         const itemIndex = currentItems.findIndex((t: TrackableItem) => t.key === itemKey);
         if (itemIndex !== -1) {
-            currentItems[itemIndex].name = newName;
+            currentItems[itemIndex].name = trimmedName;
             updateConfig(subjectKey, currentItems);
         }
     };
 
     const onAddColumn = (subjectKey: string, name: string, color: string) => {
-        const newKey = `custom_col_${Date.now()}_${Math.floor(Math.random() * 1000)}`;
-        const newItem = { name, color, key: newKey };
+        if (!subjectKey) return;
+        const trimmedName = typeof name === 'string' ? name.trim() : '';
+        if (!trimmedName || trimmedName.length > 100) return;
+        
+        const safeColor = typeof color === 'string' && color.trim() ? color.trim() : '#3b82f6';
+        const newKey = `custom_col_${Date.now()}_${Math.random().toString(36).slice(2, 9)}`;
+        const newItem: TrackableItem = { name: trimmedName, color: safeColor, key: newKey };
         const currentItems = getItems(subjectKey);
         currentItems.push(newItem);
         updateConfig(subjectKey, currentItems);
