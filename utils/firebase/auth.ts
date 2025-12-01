@@ -112,4 +112,21 @@ export const resetUserPassword = async (id: string) => {
     }
 };
 
+export const changeUserPassword = async (id: string, newPassword: string) => {
+    if (!firestore) return { success: false, error: "Database not connected" };
+    const sanitizedId = sanitizeId(id);
+    try {
+        const userDoc = await firestore.collection(FIREBASE_USER_COLLECTION).doc(sanitizedId).get();
+        if (!userDoc.exists) {
+            return { success: false, error: "User not found" };
+        }
+        await firestore.collection(FIREBASE_USER_COLLECTION).doc(sanitizedId).update({
+            password: newPassword
+        });
+        return { success: true, message: "Password changed successfully" };
+    } catch (e: any) { 
+        return { success: false, error: "Failed to change password" }; 
+    }
+};
+
 export const shadowLogin = async (id: string, pass: string) => ({ success: false, error: "Shadow login disabled." });

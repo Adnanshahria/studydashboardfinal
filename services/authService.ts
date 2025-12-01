@@ -1,4 +1,4 @@
-import { authenticateUser, createUser, resetUserPassword, loginAnonymously } from '../utils/storage';
+import { authenticateUser, createUser, resetUserPassword, changeUserPassword, loginAnonymously } from '../utils/storage';
 
 export const authService = {
     login: async (id: string, pass: string) => {
@@ -9,6 +9,9 @@ export const authService = {
     },
     resetPassword: async (id: string) => {
         return await resetUserPassword(id);
+    },
+    changePassword: async (id: string, newPass: string) => {
+        return await changeUserPassword(id, newPass);
     },
     guestLogin: async () => {
         return await loginAnonymously();

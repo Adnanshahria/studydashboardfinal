@@ -7,7 +7,7 @@ const MIN_PASSWORD_LENGTH = 6;
 
 export const useAuthHandlers = (setUserId: (id: string) => void, onSuccess?: () => void) => {
     const [showLoginModal, setShowLoginModal] = useState(false);
-    const [modalMode, setModalMode] = useState<'login' | 'create' | 'reset'>('login');
+    const [modalMode, setModalMode] = useState<'login' | 'create' | 'reset' | 'change'>('login');
     const [tempUserId, setTempUserId] = useState('');
     const [tempPassword, setTempPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
@@ -58,8 +58,13 @@ export const useAuthHandlers = (setUserId: (id: string) => void, onSuccess?: () 
             }
         }
         
-        if (modalMode === 'login' && !trimmedPass) {
+        if ((modalMode === 'login' || modalMode === 'change') && !trimmedPass) {
             setModalError('Please enter a password.');
+            return;
+        }
+        
+        if (modalMode === 'change' && trimmedPass !== confirmPassword) {
+            setModalError('Passwords do not match.');
             return;
         }
         
@@ -73,6 +78,14 @@ export const useAuthHandlers = (setUserId: (id: string) => void, onSuccess?: () 
                     setModalSuccess('Password recovered. Use it to sign in.'); 
                 } else { 
                     setModalError(result.error || 'Reset failed.'); 
+                }
+            } else if (modalMode === 'change') {
+                const result = await authService.changePassword(trimmedId, trimmedPass);
+                if (result.success) {
+                    setModalSuccess('Password changed successfully!');
+                    setTimeout(() => setModalMode('login'), 2000);
+                } else {
+                    setModalError(result.error || 'Password change failed.');
                 }
             } else if (modalMode === 'login') {
                 const result = await authService.login(trimmedId, trimmedPass);

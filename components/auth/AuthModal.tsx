@@ -5,8 +5,8 @@ import { AuthForm } from './AuthForm';
 interface AuthModalProps {
     isOpen: boolean;
     onClose: () => void;
-    modalMode: 'login' | 'create' | 'reset';
-    setModalMode: (mode: 'login' | 'create' | 'reset') => void;
+    modalMode: 'login' | 'create' | 'reset' | 'change';
+    setModalMode: (mode: 'login' | 'create' | 'reset' | 'change') => void;
     tempUserId: string;
     setTempUserId: (val: string) => void;
     tempPassword: string;
@@ -28,7 +28,7 @@ export const AuthModal: React.FC<AuthModalProps> = (props) => {
     const isDomainError = props.modalError && props.modalError.toLowerCase().includes('domain');
 
     return (
-        <Modal isOpen={props.isOpen} onClose={props.onClose} title={props.modalMode === 'login' ? 'Sign In' : props.modalMode === 'create' ? 'Create Account' : 'Reset Password'}>
+        <Modal isOpen={props.isOpen} onClose={props.onClose} title={props.modalMode === 'login' ? 'Sign In' : props.modalMode === 'create' ? 'Create Account' : props.modalMode === 'change' ? 'Change Password' : 'Reset Password'}>
             <div className="flex flex-col gap-6">
                 <div className="flex p-1 bg-slate-200/50 dark:bg-black/40 rounded-full relative backdrop-blur-sm">
                     <button onClick={() => { props.setModalMode('login'); props.resetModalState(); }} className={`flex-1 py-2 text-xs font-bold rounded-full transition-all duration-300 z-10 ${props.modalMode === 'login' ? 'bg-white dark:bg-slate-700 text-blue-600 shadow-sm' : 'text-slate-500 hover:text-slate-800 dark:hover:text-white'}`}>Sign In</button>
