@@ -149,6 +149,13 @@ export const changeUserPassword = async (id: string, oldPassword: string, newPas
             updatedAt: new Date().toISOString()
         });
         
+        // Sign out user so they can login fresh with new password
+        try {
+            await firebaseAuth.signOut();
+        } catch (signOutError: any) {
+            console.warn("Sign out after password change failed:", signOutError);
+        }
+        
         return { success: true, message: "Password changed successfully" };
     } catch (e: any) { 
         console.error("Change password error:", e);
