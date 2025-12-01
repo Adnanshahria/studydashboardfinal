@@ -125,20 +125,23 @@ export const changeUserPassword = async (id: string, oldPassword: string, newPas
             return { success: false, error: "User not found" };
         }
         
-        // Sign in user with old password to get authenticated context
-        let authUser;
+        // Get current auth user
+        const currentUser = firebaseAuth.currentUser;
+        if (!currentUser) {
+            return { success: false, error: "Not authenticated. Please login first." };
+        }
+        
+        // Reauthenticate with old password to ensure we have fresh credentials for the update
         try {
-            const authResult = await firebaseAuth.signInWithEmailAndPassword(email, oldPassword);
-            authUser = authResult.user;
-        } catch (authError: any) {
+            const credential = firebase.auth.EmailAuthProvider.credential(email, oldPassword);
+            await currentUser.reauthenticateWithCredential(credential);
+        } catch (reauthError: any) {
             return { success: false, error: "Incorrect old password. Cannot verify identity." };
         }
         
         // Update Firebase Auth password
         try {
-            if (authUser) {
-                await authUser.updatePassword(newPassword);
-            }
+            await currentUser.updatePassword(newPassword);
         } catch (updateError: any) {
             return { success: false, error: `Auth update failed: ${getErrorMessage(updateError)}` };
         }
@@ -149,14 +152,10 @@ export const changeUserPassword = async (id: string, oldPassword: string, newPas
             updatedAt: new Date().toISOString()
         });
         
-        // Sign out user so they can login fresh with new password
-        try {
-            await firebaseAuth.signOut();
-        } catch (signOutError: any) {
-            console.warn("Sign out after password change failed:", signOutError);
-        }
+        // Sign out user so they must login fresh with new password
+        await firebaseAuth.signOut();
         
-        return { success: true, message: "Password changed successfully" };
+        return { success: true, message: "Password changed successfully. Please login again." };
     } catch (e: any) { 
         console.error("Change password error:", e);
         return { success: false, error: "Failed to change password" }; 
