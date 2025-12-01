@@ -1,6 +1,7 @@
 
 import React from 'react';
 import { GuideSectionCard } from './GuideSectionCard';
+import { APP_VERSION, VERSION_LABEL } from '../../constants/version';
 
 export const GuideChangelog = () => (
     <GuideSectionCard title="🛠️ আপডেট লগ (Update Logs)" icon="📢">
@@ -8,7 +9,7 @@ export const GuideChangelog = () => (
              {/* Newest Entry */}
              <div className="p-3 bg-purple-500/5 rounded-lg border border-purple-500/10">
                 <div className="flex justify-between items-center mb-1">
-                    <span className="text-xs font-bold text-purple-600 dark:text-purple-400">v39.0.0 - Universal Deployment & Security</span>
+                    <span className="text-xs font-bold text-purple-600 dark:text-purple-400">{APP_VERSION} - {VERSION_LABEL}</span>
                     <span className="text-[10px] text-purple-500 border border-purple-200 dark:border-purple-900 px-1.5 rounded bg-purple-50 dark:bg-purple-900/20">Latest</span>
                 </div>
                 <ul className="space-y-1 text-xs text-slate-600 dark:text-slate-400 list-disc pl-4">

@@ -134,6 +134,13 @@ TrackStudy is a comprehensive study tracking dashboard built with React, Vite, a
 ## User Preferences
 None specified yet.
 
+## Version Management
+**Automatic Version Syncing**: Version is now centralized in `constants/version.ts`
+- Update `APP_VERSION` and `VERSION_LABEL` once to sync across app
+- Developer Modal automatically shows the latest version
+- Changelog automatically displays the latest version
+- No more manual duplicate updates needed!
+
 ## Notes
 - The app uses Firebase Realtime Database for data persistence
 - Authentication is optional (supports guest mode)
