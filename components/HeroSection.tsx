@@ -24,8 +24,8 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ compositeData, setting
     const logic = useHeroLogic(settings, onUpdateWeights);
 
     return (
-        <section className="grid grid-cols-1 xl:grid-cols-4 gap-6 mb-8 print:hidden items-start">
-            <div className="xl:col-span-3">
+        <section className="grid grid-cols-1 lg:grid-cols-4 gap-6 mb-8 print:hidden items-start">
+            <div className="lg:col-span-3">
                 <ProgressCard compositeData={compositeData} isEditing={logic.isEditingWeights} onEdit={() => logic.setIsEditingWeights(!logic.isEditingWeights)}>
                     <WeightsEditor 
                         settings={settings}
@@ -37,7 +37,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ compositeData, setting
                     />
                 </ProgressCard>
             </div>
-            <div className="xl:col-span-1">
+            <div className="lg:col-span-1">
                 <CountdownCard 
                     countdown={countdown} 
                     label={label} 
