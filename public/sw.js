@@ -1,7 +1,18 @@
-const CACHE_NAME = 'trackstudy-v1';
+const CACHE_NAME = 'trackstudy-v2';
+
+// Dynamically determine the base path from the service worker's location
+// This makes caching work on both root (Vercel) and subdirectory (GitHub Pages) deployments
+const getBasePath = () => {
+  const swPath = self.location.pathname;
+  // Remove 'sw.js' from the path to get the base
+  return swPath.substring(0, swPath.lastIndexOf('/') + 1);
+};
+
+const BASE_PATH = getBasePath();
+
 const urlsToCache = [
-  '/',
-  '/index.html'
+  BASE_PATH,
+  BASE_PATH + 'index.html'
 ];
 
 self.addEventListener('install', (event) => {
@@ -9,6 +20,7 @@ self.addEventListener('install', (event) => {
     caches.open(CACHE_NAME)
       .then((cache) => cache.addAll(urlsToCache))
       .then(() => self.skipWaiting())
+      .catch(err => console.warn('SW cache failed:', err))
   );
 });
 
@@ -28,7 +40,7 @@ self.addEventListener('activate', (event) => {
 
 self.addEventListener('fetch', (event) => {
   if (event.request.method !== 'GET') return;
-  
+
   event.respondWith(
     fetch(event.request)
       .then((response) => {
@@ -47,3 +59,4 @@ self.addEventListener('fetch', (event) => {
       })
   );
 });
+
