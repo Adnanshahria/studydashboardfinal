@@ -1,249 +1,337 @@
-
 <!DOCTYPE html>
 <html lang="en" data-theme="dark">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    
-    <!-- Universal Path Normalization - MUST be first script -->
-    <script>
-      (function() {
-        var loc = window.location;
-        var path = loc.pathname;
-        // If path has no extension and doesn't end with slash, redirect to add trailing slash
-        // This ensures relative paths (./assets) resolve correctly on subdirectory hosts like GitHub Pages
-        if (path !== '/' && !path.endsWith('/') && !path.includes('.')) {
-          loc.replace(loc.protocol + '//' + loc.host + path + '/' + loc.search + loc.hash);
-        }
-        // Compute and store the base path for runtime use
-        window.__APP_BASE__ = path.endsWith('/') ? path : path + '/';
-      })();
-    </script>
-    
-    <!-- SEO & Branding -->
-    <title>TrackStudy | Personal Study Tracker</title>
-    <meta name="description" content="Track your syllabus, monitor weighted progress, and maintain study streaks with the TrackStudy dashboard. Built by Mohammed Adnan Shahria." />
-    <meta name="keywords" content="Study Tracker, Syllabus Manager, Student Dashboard, Progress Tracking, Productivity, Bangla Study App" />
-    <meta name="author" content="Mohammed Adnan Shahria" />
-    
-    <!-- Open Graph -->
-    <meta property="og:title" content="TrackStudy | Study Dashboard" />
-    <meta property="og:description" content="Comprehensive syllabus tracking and weighted scoring for students." />
-    <meta property="og:type" content="website" />
-    
-    <!-- PWA Meta Tags -->
-    <link rel="manifest" href="./manifest.json" />
-    <meta name="theme-color" content="#3b82f6" />
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-    <meta name="apple-mobile-web-app-title" content="TrackStudy" />
-    <link rel="apple-touch-icon" href="./icons/icon-192.png" />
-    <link rel="icon" type="image/png" href="./icons/icon-192.png" />
 
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <script>
-      tailwind.config = {
-        darkMode: ['class', '[data-theme="dark"]'],
-        theme: {
-          extend: {
-            fontFamily: {
-              sans: ['ui-sans-serif', 'system-ui', '-apple-system', 'BlinkMacSystemFont', "Segoe UI", 'Roboto', "Helvetica Neue", 'Arial', 'Noto Sans Bengali', 'sans-serif'],
-            },
-            colors: {
-              glass: {
-                border: 'rgba(255, 255, 255, 0.08)',
-                surface: 'rgba(15, 23, 42, 0.85)',
-              }
-            },
-            animation: {
-              'fade-in': 'fadeIn 0.3s ease-out',
-              'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-            },
-            keyframes: {
-              fadeIn: {
-                '0%': { opacity: '0', transform: 'translateY(5px)' },
-                '100%': { opacity: '1', transform: 'translateY(0)' },
-              }
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+  <!-- Universal Path Normalization - MUST be first script -->
+  <script>
+    (function () {
+      var loc = window.location;
+      var path = loc.pathname;
+      // If path has no extension and doesn't end with slash, redirect to add trailing slash
+      // This ensures relative paths (./assets) resolve correctly on subdirectory hosts like GitHub Pages
+      if (path !== '/' && !path.endsWith('/') && !path.includes('.')) {
+        loc.replace(loc.protocol + '//' + loc.host + path + '/' + loc.search + loc.hash);
+      }
+      // Compute and store the base path for runtime use
+      window.__APP_BASE__ = path.endsWith('/') ? path : path + '/';
+    })();
+  </script>
+
+  <!-- SEO & Branding -->
+  <title>TrackStudy | Personal Study Tracker</title>
+  <meta name="description"
+    content="Track your syllabus, monitor weighted progress, and maintain study streaks with the TrackStudy dashboard. Built by Mohammed Adnan Shahria." />
+  <meta name="keywords"
+    content="Study Tracker, Syllabus Manager, Student Dashboard, Progress Tracking, Productivity, Bangla Study App" />
+  <meta name="author" content="Mohammed Adnan Shahria" />
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="TrackStudy | Study Dashboard" />
+  <meta property="og:description" content="Comprehensive syllabus tracking and weighted scoring for students." />
+  <meta property="og:type" content="website" />
+
+  <!-- PWA Meta Tags -->
+  <link rel="manifest" href="./manifest.json" />
+  <meta name="theme-color" content="#3b82f6" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="TrackStudy" />
+  <link rel="apple-touch-icon" href="./icons/icon-192.png" />
+  <link rel="icon" type="image/png" href="./icons/icon-192.png" />
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet">
+  <script>
+    tailwind.config = {
+      darkMode: ['class', '[data-theme="dark"]'],
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['ui-sans-serif', 'system-ui', '-apple-system', 'BlinkMacSystemFont', "Segoe UI", 'Roboto', "Helvetica Neue", 'Arial', 'Noto Sans Bengali', 'sans-serif'],
+          },
+          colors: {
+            glass: {
+              border: 'rgba(255, 255, 255, 0.08)',
+              surface: 'rgba(15, 23, 42, 0.85)',
+            }
+          },
+          animation: {
+            'fade-in': 'fadeIn 0.3s ease-out',
+            'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+          },
+          keyframes: {
+            fadeIn: {
+              '0%': { opacity: '0', transform: 'translateY(5px)' },
+              '100%': { opacity: '1', transform: 'translateY(0)' },
             }
           }
         }
       }
-    </script>
-    <style>
-      :root {
-        --bg-dark: #1A1A1C; 
-        --bg-light: #f8fafc;
-        --glow-rgb: 16, 185, 129; 
-        --border-opacity: 0.4;
-        --shadow-opacity: 0.15;
+    }
+  </script>
+  <style>
+    :root {
+      --bg-dark: #1A1A1C;
+      --bg-light: #f8fafc;
+      --glow-rgb: 16, 185, 129;
+      --border-opacity: 0.4;
+      --shadow-opacity: 0.15;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: #e2e8f0;
+      transition: background-color 0.3s ease;
+      text-rendering: optimizeLegibility;
+      font-feature-settings: "cv11", "ss01";
+    }
+
+    html[data-theme="light"] body {
+      background-color: var(--bg-light);
+      color: #1e293b;
+    }
+
+    .glass-panel {
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid rgba(var(--glow-rgb), var(--border-opacity));
+      box-shadow: 0 0 15px rgba(var(--glow-rgb), var(--shadow-opacity));
+      will-change: transform, opacity;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    html[data-theme="light"] .glass-panel {
+      background: rgba(255, 255, 255, 0.85);
+      border: 1px solid rgba(var(--glow-rgb), var(--border-opacity));
+      box-shadow: 0 0 15px rgba(var(--glow-rgb), var(--shadow-opacity));
+    }
+
+    .glass-card {
+      background: rgba(30, 41, 59, 0.85);
+      border: 1px solid rgba(var(--glow-rgb), var(--border-opacity));
+      box-shadow: 0 0 15px rgba(var(--glow-rgb), var(--shadow-opacity));
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    html[data-theme="light"] .glass-card {
+      background: rgba(255, 255, 255, 0.85);
+      border: 1px solid rgba(var(--glow-rgb), var(--border-opacity));
+      box-shadow: 0 0 15px rgba(var(--glow-rgb), var(--shadow-opacity));
+    }
+
+    .modal-glass {
+      background: rgba(30, 41, 59, 0.82);
+      border: 1px solid rgba(var(--glow-rgb), var(--border-opacity));
+      box-shadow: 0 0 20px rgba(var(--glow-rgb), var(--shadow-opacity));
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+
+    html[data-theme="light"] .modal-glass {
+      background: rgba(255, 255, 255, 0.85);
+      border: 1px solid rgba(var(--glow-rgb), var(--border-opacity));
+      box-shadow: 0 0 20px rgba(var(--glow-rgb), var(--shadow-opacity));
+    }
+
+    .table-header-glow {
+      box-shadow: 0 2px 8px rgba(var(--glow-rgb), 0.15), inset 0 -1px 0 rgba(255, 255, 255, 0.1);
+    }
+
+    .table-header-glow th {
+      text-shadow: 0 0 6px rgba(255, 255, 255, 0.3);
+    }
+
+    html[data-theme="light"] .table-header-glow {
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08), inset 0 -1px 0 rgba(0, 0, 0, 0.05);
+    }
+
+    html[data-theme="light"] .table-header-glow th {
+      text-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
+    }
+
+    body.no-glow .glass-panel,
+    body.no-glow .glass-card {
+      border-color: rgba(255, 255, 255, 0.1);
+      box-shadow: none;
+    }
+
+    html[data-theme="light"] body.no-glow .glass-panel,
+    html[data-theme="light"] body.no-glow .glass-card {
+      border-color: rgba(0, 0, 0, 0.1);
+      box-shadow: none;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #3b82f6;
+      border-radius: 10px;
+      opacity: 0.5;
+    }
+
+    .custom-scrollbar {
+      scrollbar-width: thin;
+      scrollbar-color: #3b82f6 transparent;
+    }
+
+    /* Print Optimization */
+    @media print {
+      @page {
+        size: landscape;
+        margin: 6mm;
       }
+
+      /* Base print styles */
       body {
-        background-color: var(--bg-dark);
-        color: #e2e8f0;
-        transition: background-color 0.3s ease;
-        text-rendering: optimizeLegibility;
-        font-feature-settings: "cv11", "ss01";
-      }
-      html[data-theme="light"] body {
-        background-color: var(--bg-light);
-        color: #1e293b;
+        background: white !important;
+        color: black !important;
+        zoom: 0.6;
+        padding: 0;
+        margin: 0;
       }
 
-      .glass-panel {
-        background: rgba(15, 23, 42, 0.85);
-        border: 1px solid rgba(var(--glow-rgb), var(--border-opacity));
-        box-shadow: 0 0 15px rgba(var(--glow-rgb), var(--shadow-opacity));
-        will-change: transform, opacity;
-        transition: border-color 0.3s ease, box-shadow 0.3s ease;
+      /* Hide UI Elements: Navbar, Floating Buttons, Edit Toggles, Sidebar */
+      .no-print,
+      [class*="floating"],
+      [class*="edit-toggle"],
+      .sidebar,
+      #sidebar {
+        display: none !important;
       }
-      html[data-theme="light"] .glass-panel {
-        background: rgba(255, 255, 255, 0.85);
-        border: 1px solid rgba(var(--glow-rgb), var(--border-opacity));
-        box-shadow: 0 0 15px rgba(var(--glow-rgb), var(--shadow-opacity));
+
+      /* Force print color accuracy */
+      * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
       }
-      
+
+      /* Reset glass styling for print */
+      .glass-panel,
       .glass-card {
-        background: rgba(30, 41, 59, 0.85);
-        border: 1px solid rgba(var(--glow-rgb), var(--border-opacity));
-        box-shadow: 0 0 15px rgba(var(--glow-rgb), var(--shadow-opacity));
-        transition: border-color 0.3s ease, box-shadow 0.3s ease;
-      }
-      html[data-theme="light"] .glass-card {
-        background: rgba(255, 255, 255, 0.85);
-        border: 1px solid rgba(var(--glow-rgb), var(--border-opacity));
-        box-shadow: 0 0 15px rgba(var(--glow-rgb), var(--shadow-opacity));
+        border: 1px solid #ccc !important;
+        box-shadow: none !important;
+        background: white !important;
       }
 
-      .modal-glass {
-        background: rgba(30, 41, 59, 0.82);
-        border: 1px solid rgba(var(--glow-rgb), var(--border-opacity));
-        box-shadow: 0 0 20px rgba(var(--glow-rgb), var(--shadow-opacity));
-        backdrop-filter: blur(12px);
-        -webkit-backdrop-filter: blur(12px);
-      }
-      html[data-theme="light"] .modal-glass {
-        background: rgba(255, 255, 255, 0.85);
-        border: 1px solid rgba(var(--glow-rgb), var(--border-opacity));
-        box-shadow: 0 0 20px rgba(var(--glow-rgb), var(--shadow-opacity));
+      .custom-scrollbar {
+        overflow: visible !important;
+        max-height: none !important;
       }
 
-      .table-header-glow {
-        box-shadow: 0 2px 8px rgba(var(--glow-rgb), 0.15), inset 0 -1px 0 rgba(255, 255, 255, 0.1);
-      }
-      .table-header-glow th {
-        text-shadow: 0 0 6px rgba(255, 255, 255, 0.3);
-      }
-      html[data-theme="light"] .table-header-glow {
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08), inset 0 -1px 0 rgba(0, 0, 0, 0.05);
-      }
-      html[data-theme="light"] .table-header-glow th {
-        text-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
+      /* Table styling for print */
+      table {
+        page-break-inside: auto;
+        width: 100% !important;
+        font-size: 9px !important;
       }
 
-      body.no-glow .glass-panel, body.no-glow .glass-card {
-        border-color: rgba(255, 255, 255, 0.1);
-        box-shadow: none;
-      }
-      html[data-theme="light"] body.no-glow .glass-panel, 
-      html[data-theme="light"] body.no-glow .glass-card {
-        border-color: rgba(0, 0, 0, 0.1);
-        box-shadow: none;
+      tr {
+        page-break-inside: avoid;
+        page-break-after: auto;
       }
 
-      .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
-      .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
-      .custom-scrollbar::-webkit-scrollbar-thumb { background: #3b82f6; border-radius: 10px; opacity: 0.5; }
-      .custom-scrollbar { scrollbar-width: thin; scrollbar-color: #3b82f6 transparent; }
-
-      /* Print Optimization */
-      @media print {
-        @page { size: landscape; margin: 6mm; }
-        
-        /* Base print styles */
-        body { background: white !important; color: black !important; zoom: 0.6; padding: 0; margin: 0; }
-        
-        /* Hide UI Elements: Navbar, Floating Buttons, Edit Toggles, Sidebar */
-        .no-print,
-        [class*="floating"],
-        [class*="edit-toggle"],
-        .sidebar,
-        #sidebar { display: none !important; }
-        
-        /* Force print color accuracy */
-        * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-        
-        /* Reset glass styling for print */
-        .glass-panel, .glass-card { border: 1px solid #ccc !important; box-shadow: none !important; background: white !important; }
-        .custom-scrollbar { overflow: visible !important; max-height: none !important; }
-        
-        /* Table styling for print */
-        table { page-break-inside: auto; width: 100% !important; font-size: 9px !important; }
-        tr { page-break-inside: avoid; page-break-after: auto; }
-        thead { display: table-header-group; }
-        th, td { padding: 3px !important; }
-        
-        /* Table header bold in print */
-        thead tr { font-weight: bold !important; background: #f3f4f6 !important; }
-        thead th { font-weight: 700 !important; }
-        
-        /* Print Container - CSS Grid Layout for Both Papers */
-        .print-grid { 
-          display: grid !important; 
-          grid-template-columns: 1fr 1fr !important; 
-          gap: 10px !important; 
-          width: 100% !important; 
-          page-break-inside: avoid; 
-        }
-        
-        /* Paper 1 on Left, Paper 2 on Right */
-        .paper-section-1 { grid-column: 1; }
-        .paper-section-2 { grid-column: 2; }
-        
-        /* Single Paper Selection: Print Paper 1 Only - Full Width */
-        .print-show-p1 .paper-section-2 { display: none !important; }
-        .print-show-p1 .print-grid { grid-template-columns: 1fr !important; }
-        .print-show-p1 .paper-section-1 { grid-column: 1 / -1; }
-        
-        /* Single Paper Selection: Print Paper 2 Only - Full Width */
-        .print-show-p2 .paper-section-1 { display: none !important; }
-        .print-show-p2 .print-grid { grid-template-columns: 1fr !important; }
-        .print-show-p2 .paper-section-2 { grid-column: 1 / -1; }
-        
-        /* Avoid page breaks within paper sections */
-        .print-grid > div { break-inside: avoid; }
-        
-        /* Hide note icons in print */
-        .note-icon { display: none !important; }
+      thead {
+        display: table-header-group;
       }
-    </style>
-  <script type="importmap">
-{
-  "imports": {
-    "react/": "https://aistudiocdn.com/react@^19.2.0/",
-    "react": "https://aistudiocdn.com/react@^19.2.0",
-    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
-    "firebase/": "https://aistudiocdn.com/firebase@^12.6.0/",
-    "@vitejs/plugin-react": "https://aistudiocdn.com/@vitejs/plugin-react@^5.1.1",
-    "vite": "https://aistudiocdn.com/vite@^7.2.4"
-  }
-}
-</script>
+
+      th,
+      td {
+        padding: 3px !important;
+      }
+
+      /* Table header bold in print */
+      thead tr {
+        font-weight: bold !important;
+        background: #f3f4f6 !important;
+      }
+
+      thead th {
+        font-weight: 700 !important;
+      }
+
+      /* Print Container - CSS Grid Layout for Both Papers */
+      .print-grid {
+        display: grid !important;
+        grid-template-columns: 1fr 1fr !important;
+        gap: 10px !important;
+        width: 100% !important;
+        page-break-inside: avoid;
+      }
+
+      /* Paper 1 on Left, Paper 2 on Right */
+      .paper-section-1 {
+        grid-column: 1;
+      }
+
+      .paper-section-2 {
+        grid-column: 2;
+      }
+
+      /* Single Paper Selection: Print Paper 1 Only - Full Width */
+      .print-show-p1 .paper-section-2 {
+        display: none !important;
+      }
+
+      .print-show-p1 .print-grid {
+        grid-template-columns: 1fr !important;
+      }
+
+      .print-show-p1 .paper-section-1 {
+        grid-column: 1 / -1;
+      }
+
+      /* Single Paper Selection: Print Paper 2 Only - Full Width */
+      .print-show-p2 .paper-section-1 {
+        display: none !important;
+      }
+
+      .print-show-p2 .print-grid {
+        grid-template-columns: 1fr !important;
+      }
+
+      .print-show-p2 .paper-section-2 {
+        grid-column: 1 / -1;
+      }
+
+      /* Avoid page breaks within paper sections */
+      .print-grid>div {
+        break-inside: avoid;
+      }
+
+      /* Hide note icons in print */
+      .note-icon {
+        display: none !important;
+      }
+    }
+  </style>
+
 </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="./index.tsx"></script>
-    <script>
-      if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-          var swPath = (window.__APP_BASE__ || './') + 'sw.js';
-          navigator.serviceWorker.register(swPath)
-            .then((reg) => console.log('SW registered:', reg.scope))
-            .catch((err) => console.log('SW registration failed:', err));
-        });
-      }
-    </script>
-  </body>
+
+<body>
+  <div id="root"></div>
+  <script type="module" src="./index.tsx"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        var swPath = (window.__APP_BASE__ || './') + 'sw.js';
+        navigator.serviceWorker.register(swPath)
+          .then((reg) => console.log('SW registered:', reg.scope))
+          .catch((err) => console.log('SW registration failed:', err));
+      });
+    }
+  </script>
+</body>
+
 </html>
