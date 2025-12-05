@@ -4,8 +4,8 @@ import { Button } from '../ui/Button';
 
 export const WelcomeHero: React.FC<{ onLogin: () => void }> = ({ onLogin }) => (
     <div className="flex flex-col items-center justify-center py-20 text-center animate-fade-in mt-10">
-        <div className="w-24 h-24 glass-card rounded-3xl flex items-center justify-center mb-8 shadow-2xl shadow-blue-900/20 dark:shadow-black/40 bg-gradient-to-br from-white/10 to-white/5">
-            <span className="text-5xl drop-shadow-lg">🚀</span>
+        <div className="w-32 h-32 mb-8 rounded-3xl shadow-2xl shadow-blue-500/20 dark:shadow-emerald-500/20 animate-fade-in hover:scale-110 transition-transform duration-500">
+            <img src="./icons/icon-512.png" alt="TrackStudy Logo" className="w-full h-full object-contain drop-shadow-2xl" />
         </div>
         <h2 className="text-4xl font-black mb-4 text-transparent bg-clip-text bg-gradient-to-r from-slate-900 to-slate-600 dark:from-white dark:to-slate-400">TrackStudy</h2>
         <p className="text-slate-600 dark:text-slate-400 max-w-md mb-8 text-lg font-medium">Track your syllabus, crush your goals, and master every chapter with your personal weighted study tracker.</p>
